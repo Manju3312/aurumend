@@ -9,19 +9,37 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getSession();
     const body = await req.json().catch(() => ({}));
-    let { vendorReleaseId, subscriptionId } = body;
+    const vendor_slug = body.vendor_slug || body.vendorSlug;
+    const repo_full_name = body.repo_full_name || body.repoFullName;
+    let vendorReleaseId = body.vendorReleaseId || body.vendor_release_id;
+    let subscriptionId = body.subscriptionId || body.subscription_id;
 
-    // If IDs not provided, auto-discover first active release and subscription
+    // Reject empty payload or requests without any target identifiers
+    if (!vendorReleaseId && !subscriptionId && !vendor_slug && !repo_full_name) {
+      return NextResponse.json(
+        {
+          error: "Missing migration parameters. Please provide vendorReleaseId/subscriptionId or vendor_slug/repo_full_name.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Resolve or auto-discover release matching vendor_slug if vendorReleaseId not provided
     if (!vendorReleaseId) {
-      let release = await db.query.vendorApiReleases.findFirst();
+      let release = vendor_slug
+        ? await db.query.vendorApiReleases.findFirst({
+            where: eq(vendorApiReleases.vendorSlug, vendor_slug),
+          })
+        : await db.query.vendorApiReleases.findFirst();
+
       if (!release) {
         // Seed initial release for Stripe v2025-04
         const [newRelease] = await db
           .insert(vendorApiReleases)
           .values({
             vendorOrgId: session.orgId,
-            vendorSlug: "stripe",
-            versionTag: "v2025-04-01",
+            vendorSlug: vendor_slug || "stripe",
+            versionTag: body.version_tag || body.versionTag || "v2025-04-01",
             openapiSpecJson: {
               openapi: "3.0.0",
               info: { title: "Stripe API", version: "2025-04-01" },
@@ -43,9 +61,13 @@ export async function POST(req: NextRequest) {
     }
 
     if (!subscriptionId) {
-      let sub = await db.query.repoApiSubscriptions.findFirst({
-        where: eq(repoApiSubscriptions.consumerOrgId, session.orgId),
-      });
+      let sub = repo_full_name
+        ? await db.query.repoApiSubscriptions.findFirst({
+            where: eq(repoApiSubscriptions.repoFullName, repo_full_name),
+          })
+        : await db.query.repoApiSubscriptions.findFirst({
+            where: eq(repoApiSubscriptions.consumerOrgId, session.orgId),
+          });
 
       if (!sub) {
         const [newSub] = await db

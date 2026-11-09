@@ -21,7 +21,7 @@ export async function GET() {
       createdAt: k.createdAt,
     }));
 
-    return NextResponse.json({ keys: safeKeys });
+    return NextResponse.json({ keys: safeKeys, apiKeys: safeKeys });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

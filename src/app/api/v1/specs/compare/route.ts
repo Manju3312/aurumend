@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      breaking_count: diff.totalBreakingChanges,
       diff,
       manifest,
     });

@@ -79,12 +79,14 @@ export async function extractProductDetails(prompt: string) {
     }
 
     // 3. Run AST indexing engine
+    const startTime = Date.now();
     const result = await indexCustomerRepository({
       orgId: session.orgId,
       installationId,
       repoFullName,
       files,
     });
+    const scanDurationMs = Date.now() - startTime;
 
     // Record Sovereign Audit Log
     try {
@@ -106,6 +108,12 @@ export async function extractProductDetails(prompt: string) {
 
     return NextResponse.json({
       success: true,
+      filesScanned: result.filesScanned,
+      files_scanned: result.filesScanned,
+      scanDurationMs,
+      scan_duration_ms: scanDurationMs,
+      detectedVendors: result.detectedVendors,
+      matches: result.matches,
       result,
     });
   } catch (error: any) {

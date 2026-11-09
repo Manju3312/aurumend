@@ -13,6 +13,14 @@ export async function POST(
     const session = await getSession();
     const { id } = await params;
 
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!id || !UUID_REGEX.test(id)) {
+      return NextResponse.json(
+        { error: "Invalid PR ID format. Parameter must be a valid UUID." },
+        { status: 400 }
+      );
+    }
+
     const pr = await db.query.migrationPullRequests.findFirst({
       where: eq(migrationPullRequests.id, id),
       with: {

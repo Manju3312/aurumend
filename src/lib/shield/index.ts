@@ -237,3 +237,4 @@ export function getAllShieldStats(): CircuitBreakerStats[] {
   }
   return Array.from(shieldRegistry.values()).map((s) => s.getStats());
 }
+
