@@ -254,3 +254,4 @@ switch (command) {
     showHelp();
     break;
 }
+

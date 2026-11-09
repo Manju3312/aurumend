@@ -185,3 +185,4 @@ npx aurumend check-auth --token aur_live_xxxxxxxx
 
 ## 🛡️ License
 Private & Proprietary — Sovereign Protocol Architecture.
+

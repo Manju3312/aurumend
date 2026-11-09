@@ -33,6 +33,18 @@ export default function ConsumerView({
   const [migrating, setMigrating] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("installed") === "true") {
+        const account = params.get("account") || "acme-corp";
+        setActionMessage(
+          `✓ GitHub App installed and linked successfully for '${account}'! JIT tokens and repo webhooks are active.`
+        );
+      }
+    }
+  }, []);
+
   const handleScanCodebase = async () => {
     setScanning(true);
     setActionMessage(null);

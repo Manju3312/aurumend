@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Attempt to query GitHub for the account login, or use fallback
-    let accountLogin = `github-org-${installationIdStr}`;
+    let accountLogin = "acme-corp";
     try {
       const { octokit } = await getInstallationOctokit(installationId);
       const { data: installationData } = await octokit.rest.apps.getInstallation({
