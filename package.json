@@ -2,6 +2,9 @@
   "name": "aurumend",
   "version": "0.1.0",
   "private": true,
+  "bin": {
+    "aurumend": "./bin/aurumend.js"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
