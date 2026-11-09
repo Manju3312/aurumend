@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  --font-cinzel: 'Cinzel', Georgia, serif;
+  --font-jakarta: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-jetbrains: 'JetBrains Mono', monospace;
   --bg-obsidian: #070709;
   --bg-charcoal: #111116;
   --bg-charcoal-elevated: #16161f;

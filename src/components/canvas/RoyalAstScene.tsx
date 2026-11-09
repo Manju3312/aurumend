@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, Html, OrbitControls } from "@react-three/drei";
+import { Float, OrbitControls } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
@@ -100,16 +100,12 @@ function GoldenNeuralBridge({
 // Dark Obsidian Polyhedron Node (Producer or Consumer)
 function ObsidianNode({
   position,
-  label,
   role,
-  status,
   isFractured,
   isHealed,
 }: {
   position: [number, number, number];
-  label: string;
   role: "producer" | "consumer";
-  status: string;
   isFractured?: boolean;
   isHealed?: boolean;
 }) {
@@ -188,27 +184,6 @@ function ObsidianNode({
           opacity={0.7}
         />
       </mesh>
-
-      {/* Label Badge */}
-      <Html position={[0, -2.1, 0]} center distanceFactor={12}>
-        <div className="flex flex-col items-center pointer-events-none select-none">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#111116]/90 border border-[#D4AF37]/30 backdrop-blur-md shadow-lg shadow-black/60">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                role === "producer"
-                  ? "bg-[#D4AF37] animate-pulse"
-                  : isFractured && !isHealed
-                  ? "bg-rose-500 animate-ping"
-                  : "bg-emerald-400"
-              }`}
-            />
-            <span className="text-[10px] tracking-wider uppercase font-semibold text-[#FAF9F6]">
-              {label}
-            </span>
-          </div>
-          <span className="text-[9px] text-[#A1A1AA] mt-1 font-mono">{status}</span>
-        </div>
-      </Html>
     </group>
   );
 }
@@ -294,21 +269,13 @@ export default function RoyalAstScene({
           {/* Producer Node: API Vendor */}
           <ObsidianNode
             position={producerPos}
-            label="API Producer (Stripe v2)"
             role="producer"
-            status="Emitting Spec v2025-04"
           />
 
           {/* Consumer Node: Customer Repo */}
           <ObsidianNode
             position={consumerPos}
-            label="Consumer Repo (Payment-Svc)"
             role="consumer"
-            status={
-              isSimulating
-                ? "Self-Healing via Aurumend..."
-                : "Protected • Contract Synced"
-            }
             isFractured={isSimulating}
             isHealed={!isSimulating}
           />
@@ -346,4 +313,3 @@ export default function RoyalAstScene({
     </div>
   );
 }
-

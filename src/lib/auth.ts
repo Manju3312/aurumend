@@ -175,3 +175,4 @@ export async function getSession(): Promise<SessionUser> {
 export function createSessionToken(user: SessionUser): string {
   return jwt.sign(user, JWT_SECRET, { expiresIn: "7d" });
 }
+

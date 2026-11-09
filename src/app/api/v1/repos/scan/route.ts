@@ -95,3 +95,4 @@ export async function extractProductDetails(prompt: string) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
