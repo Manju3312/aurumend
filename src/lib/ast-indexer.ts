@@ -78,6 +78,25 @@ const VENDOR_PATTERNS = [
     pattern: "$OBJ.emails.send($$$ARGS)",
     description: "Resend emails.send call",
   },
+  // Python Patterns
+  {
+    vendorSlug: "stripe",
+    kind: "sdk_call" as const,
+    pattern: "stripe.Charge.create($$$ARGS)",
+    description: "Python Stripe Charge.create method call",
+  },
+  {
+    vendorSlug: "openai",
+    kind: "sdk_call" as const,
+    pattern: "openai.ChatCompletion.create($$$ARGS)",
+    description: "Python OpenAI ChatCompletion.create call",
+  },
+  {
+    vendorSlug: "twilio",
+    kind: "sdk_instance" as const,
+    pattern: "Client($$$ARGS)",
+    description: "Twilio Client instantiation",
+  },
 ];
 
 /**
@@ -94,6 +113,16 @@ export function scanFileWithAstGrep(
   let lang = Lang.TypeScript;
   if (ext === ".js" || ext === ".jsx") lang = Lang.JavaScript;
   if (ext === ".tsx") lang = Lang.Tsx;
+  if (ext === ".py") {
+    // If Lang.Python is supported in @ast-grep/napi, use it; otherwise fallback
+    try {
+      if ((Lang as any).Python !== undefined) {
+        lang = (Lang as any).Python;
+      }
+    } catch {
+      lang = Lang.TypeScript;
+    }
+  }
 
   try {
     const root = parse(lang, content);
