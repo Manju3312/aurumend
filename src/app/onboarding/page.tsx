@@ -42,17 +42,16 @@ export default function OnboardingPage() {
       <RoyalAstCanvas isSimulating={saving} />
       <div className="pointer-events-none fixed inset-0 z-0 bg-radial from-transparent via-[#070709]/70 to-[#070709]" />
 
-      <div className="relative z-10 w-full max-w-xl rounded-2xl bg-[#111116]/90 backdrop-blur-2xl border border-[#D4AF37]/30 p-8 sm:p-10 shadow-2xl">
+      <div className="relative z-10 w-full max-w-xl rounded-2xl dev-card p-8 sm:p-10 shadow-2xl">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#F3E5AB] text-xs font-mono mb-3">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Organization Initialization</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono mb-3 text-zinc-400">
+            <span>Setup Organization</span>
           </div>
-          <h1 className="font-serif text-3xl font-bold text-[#FAF9F6]">
-            Configure Your Protocol Spine
+          <h1 className="font-sans text-3xl font-bold tracking-tight text-[#FAF9F6]">
+            Configure your workspace
           </h1>
-          <p className="text-xs text-[#A1A1AA] mt-1">
-            Choose your organization&apos;s operating model across the sovereign network
+          <p className="text-xs text-[#A1A1AA] mt-1 font-sans">
+            Select your operating mode to personalize your Aurumend dashboard
           </p>
         </div>
 

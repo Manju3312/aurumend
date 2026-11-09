@@ -68,24 +68,24 @@ export default function GitHubConnectionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-2xl rounded-2xl bg-[#111116] border border-[#D4AF37]/35 shadow-[0_0_50px_rgba(212,175,55,0.15)] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-2xl rounded-2xl bg-[#0e0e13] border border-white/[0.08] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Top Header */}
-        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-[#0b0b0e]">
+        <div className="p-6 border-b border-white/[0.06] flex items-center justify-between bg-[#0a0a0f]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#070709] border border-[#D4AF37]/40 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-              <Github className="w-5 h-5 text-[#F3E5AB]" />
+            <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shadow-sm">
+              <Github className="w-4 h-4 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-serif text-lg font-bold text-[#FAF9F6]">
-                  GitHub Sovereign Bridge
+                <h3 className="font-sans text-base font-bold tracking-tight text-[#FAF9F6]">
+                  Connect GitHub Organization
                 </h3>
-                <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-950/70 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[9px] font-mono uppercase px-2 py-0.2 rounded bg-emerald-950/70 text-emerald-400 border border-emerald-500/30">
                   JIT Auth
                 </span>
               </div>
-              <p className="text-xs text-[#A1A1AA]">
-                Connect customer repositories for autonomous AST indexing & contract PRs
+              <p className="text-xs text-[#A1A1AA] font-sans">
+                Grant repository access for AST call-site indexing and automated pull requests
               </p>
             </div>
           </div>
@@ -98,37 +98,37 @@ export default function GitHubConnectionModal({
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-white/10 bg-[#0d0d12] px-6 pt-2">
+        <div className="flex border-b border-white/[0.06] bg-[#09090d] px-6 pt-2 font-sans">
           <button
             onClick={() => setActiveTab("instant")}
-            className={`pb-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+            className={`pb-3 px-4 text-xs font-medium tracking-tight transition-all border-b-2 cursor-pointer ${
               activeTab === "instant"
-                ? "border-[#D4AF37] text-[#F3E5AB]"
+                ? "border-amber-400 text-white font-semibold"
                 : "border-transparent text-[#A1A1AA] hover:text-white"
             }`}
           >
-            Instant Sandbox Connect
+            Quick Connect (Demo Mode)
           </button>
           <button
             onClick={() => setActiveTab("production")}
-            className={`pb-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+            className={`pb-3 px-4 text-xs font-medium tracking-tight transition-all border-b-2 cursor-pointer ${
               activeTab === "production"
-                ? "border-[#D4AF37] text-[#F3E5AB]"
+                ? "border-amber-400 text-white font-semibold"
                 : "border-transparent text-[#A1A1AA] hover:text-white"
             }`}
           >
-            Custom GitHub App
+            Production GitHub App
           </button>
           <button
             onClick={() => setActiveTab("linked")}
-            className={`pb-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
+            className={`pb-3 px-4 text-xs font-medium tracking-tight transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
               activeTab === "linked"
-                ? "border-[#D4AF37] text-[#F3E5AB]"
+                ? "border-amber-400 text-white font-semibold"
                 : "border-transparent text-[#A1A1AA] hover:text-white"
             }`}
           >
             <span>Linked Accounts</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#D4AF37]/20 text-[#F3E5AB]">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/[0.08] text-white">
               {installations.length}
             </span>
           </button>
@@ -375,3 +375,4 @@ export default function GitHubConnectionModal({
     </div>
   );
 }
+

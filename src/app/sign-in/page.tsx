@@ -46,21 +46,21 @@ export default function SignInPage() {
       <div className="pointer-events-none fixed inset-0 z-0 bg-radial from-transparent via-[#070709]/70 to-[#070709]" />
 
       {/* Sign-in Card */}
-      <div className="relative z-10 w-full max-w-md rounded-2xl bg-[#111116]/85 backdrop-blur-2xl border border-[#D4AF37]/30 p-8 shadow-2xl">
+      <div className="relative z-10 w-full max-w-md rounded-2xl dev-card p-8 shadow-2xl">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 mb-3 group">
-            <div className="w-9 h-9 rounded-xl bg-[#111116] border border-[#D4AF37]/40 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)] group-hover:border-[#D4AF37] transition-all">
-              <span className="font-serif font-bold text-lg text-[#F3E5AB]">A</span>
+            <div className="w-8 h-8 rounded-lg bg-[#14141d] border border-amber-500/30 flex items-center justify-center shadow-sm group-hover:border-amber-400 transition-all">
+              <span className="font-sans font-bold text-xs text-amber-300">AU</span>
             </div>
-            <span className="font-serif font-bold tracking-widest text-xl text-[#FAF9F6]">
-              AURUMEND
+            <span className="font-sans font-bold tracking-tight text-lg text-[#FAF9F6]">
+              Aurumend
             </span>
           </Link>
-          <h1 className="font-serif text-2xl font-bold text-[#FAF9F6]">
-            Sovereign Portal
+          <h1 className="font-sans text-2xl font-bold tracking-tight text-[#FAF9F6]">
+            Sign in to Aurumend
           </h1>
-          <p className="text-xs text-[#A1A1AA] mt-1">
-            Authenticate to manage self-healing subscriptions & releases
+          <p className="text-xs text-[#A1A1AA] mt-1 font-sans">
+            Connect repositories and automate breaking API migrations
           </p>
         </div>
 

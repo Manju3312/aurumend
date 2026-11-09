@@ -162,7 +162,7 @@ export default function ProducerView({
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Customer Adoption Rate
           </div>
-          <div className="font-serif text-3xl font-bold text-[#F3E5AB]">82.4%</div>
+          <div className="font-sans text-3xl font-bold text-[#F3E5AB]">82.4%</div>
           <p className="text-xs text-emerald-400 mt-1 font-mono">
             +38% faster than manual migrations
           </p>
@@ -172,7 +172,7 @@ export default function ProducerView({
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Subscribed Repositories
           </div>
-          <div className="font-serif text-3xl font-bold text-[#FAF9F6]">842 Repos</div>
+          <div className="font-sans text-3xl font-bold text-[#FAF9F6]">842 Repos</div>
           <p className="text-xs text-[#D4AF37] mt-1 font-mono">
             Across 148 Organizations
           </p>
@@ -182,7 +182,7 @@ export default function ProducerView({
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Verified PRs Delivered
           </div>
-          <div className="font-serif text-3xl font-bold text-[#FAF9F6]">712 PRs</div>
+          <div className="font-sans text-3xl font-bold text-[#FAF9F6]">712 PRs</div>
           <p className="text-xs text-emerald-400 mt-1 font-mono">
             100% Sandbox Contract Passed
           </p>
@@ -192,7 +192,7 @@ export default function ProducerView({
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Dev Hours Saved
           </div>
-          <div className="font-serif text-3xl font-bold text-[#F3E5AB]">3,560 Hrs</div>
+          <div className="font-sans text-3xl font-bold text-[#F3E5AB]">3,560 Hrs</div>
           <p className="text-xs text-zinc-400 mt-1 font-mono">
             Zero customer churn
           </p>
@@ -222,7 +222,7 @@ export default function ProducerView({
               <UploadCloud className="w-5 h-5 text-[#F3E5AB]" />
             </div>
             <div>
-              <h3 className="font-serif text-xl font-bold text-[#FAF9F6]">
+              <h3 className="font-sans text-xl font-bold text-[#FAF9F6]">
                 Publish New API Spec Release
               </h3>
               <p className="text-xs text-[#A1A1AA]">
@@ -356,7 +356,7 @@ export default function ProducerView({
       <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
         <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div>
-            <h3 className="font-serif text-base font-bold text-[#FAF9F6]">
+            <h3 className="font-sans text-base font-bold text-[#FAF9F6]">
               Published Vendor API Releases
             </h3>
             <p className="text-xs text-[#A1A1AA]">

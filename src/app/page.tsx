@@ -39,6 +39,7 @@ export default function Home() {
       <HeroSection
         isSimulating={isSimulating}
         onSimulateToggle={handleSimulateToggle}
+        onOpenGitHubModal={() => setGithubModalOpen(true)}
       />
 
       {/* Split-Screen Interactive Demo */}

@@ -164,23 +164,23 @@ export default function ConsumerView({
         </div>
       )}
 
-      {/* Top 3-Card Health & Status Metric Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Top 3-Card Status Metric Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* 1. Health Ring Widget */}
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl flex items-center justify-between hover:border-[#D4AF37]/50 transition-colors">
+        <div className="p-5 rounded-2xl dev-card flex items-center justify-between shadow-lg">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
-              Repository Immunity Ring
+              Contract Monitoring
             </div>
-            <div className="font-serif text-3xl font-bold text-[#F3E5AB]">100% Synced</div>
+            <div className="font-sans text-2xl font-bold text-[#FAF9F6]">100% Up-to-Date</div>
             <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-mono">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>0 Sunset Breaking Vulnerabilities</span>
+              <span>0 Unhandled Deprecations</span>
             </p>
           </div>
-          <div className="relative w-16 h-16 flex items-center justify-center">
+          <div className="relative w-14 h-14 flex items-center justify-center">
             <div
-              className="w-16 h-16 rounded-full border-4 border-emerald-500/30 border-t-[#D4AF37] animate-spin"
+              className="w-14 h-14 rounded-full border-2 border-emerald-500/20 border-t-emerald-400 animate-spin"
               style={{ animationDuration: "10s" }}
             />
             <span className="absolute font-mono text-xs font-bold text-[#FAF9F6]">4/4</span>
@@ -188,38 +188,38 @@ export default function ConsumerView({
         </div>
 
         {/* 2. Detected Subscriptions Widget */}
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl flex items-center justify-between hover:border-[#D4AF37]/50 transition-colors">
+        <div className="p-5 rounded-2xl dev-card flex items-center justify-between shadow-lg">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
               Active AST Subscriptions
             </div>
-            <div className="font-serif text-3xl font-bold text-[#FAF9F6]">
-              {subscriptions.length || 3} Vendors
+            <div className="font-sans text-2xl font-bold text-[#FAF9F6]">
+              {subscriptions.length || 3} Vendor APIs
             </div>
-            <p className="text-xs text-[#D4AF37] mt-1 font-mono">
+            <p className="text-xs text-amber-300/80 mt-1 font-mono">
               Stripe • OpenAI • Resend
             </p>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center">
-            <Layers className="w-6 h-6 text-[#F3E5AB]" />
+          <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+            <Layers className="w-5 h-5 text-amber-300" />
           </div>
         </div>
 
         {/* 3. Verified Pull Requests */}
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl flex items-center justify-between hover:border-[#D4AF37]/50 transition-colors">
+        <div className="p-5 rounded-2xl dev-card flex items-center justify-between shadow-lg">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
-              Auto-Verified Pull Requests
+              Contract-Verified Pull Requests
             </div>
-            <div className="font-serif text-3xl font-bold text-[#FAF9F6]">
-              {migrationPrs.length || 1} Ready
+            <div className="font-sans text-2xl font-bold text-[#FAF9F6]">
+              {migrationPrs.length || 1} Ready to Merge
             </div>
             <p className="text-xs text-emerald-400 mt-1 font-mono">
-              Tested in E2B MicroVM
+              Stoplight Prism Tests Passed
             </p>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-            <GitPullRequest className="w-6 h-6 text-emerald-400" />
+          <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+            <GitPullRequest className="w-5 h-5 text-emerald-400" />
           </div>
         </div>
       </div>
@@ -277,7 +277,7 @@ export default function ConsumerView({
       <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl overflow-hidden">
         <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div>
-            <h3 className="font-serif text-lg font-bold text-[#FAF9F6]">
+            <h3 className="font-sans text-base font-semibold text-[#FAF9F6]">
               Autonomous Migration Pull Requests
             </h3>
             <p className="text-xs text-[#A1A1AA]">
@@ -405,7 +405,7 @@ export default function ConsumerView({
                 <Send className="w-3.5 h-3.5 text-emerald-400" />
               </div>
               <div>
-                <h3 className="font-serif text-sm font-bold text-[#FAF9F6]">
+                <h3 className="font-sans text-sm font-semibold text-[#FAF9F6]">
                   Live Webhook Signature Tester
                 </h3>
                 <p className="text-[10px] text-[#A1A1AA]">
@@ -449,7 +449,7 @@ export default function ConsumerView({
         <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-white/10 shadow-xl p-5">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
             <div>
-              <h3 className="font-serif text-sm font-bold text-[#FAF9F6]">
+              <h3 className="font-sans text-sm font-semibold text-[#FAF9F6]">
                 Indexed AST Call-Sites in Repository
               </h3>
               <p className="text-[10px] text-[#A1A1AA]">

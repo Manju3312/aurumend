@@ -26,8 +26,8 @@
   --color-silver: var(--muted-silver);
 
   --font-serif: var(--font-cinzel), 'Cinzel', serif;
-  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
-  --font-mono: var(--font-jetbrains), 'JetBrains Mono', monospace;
+  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 * {
@@ -45,6 +45,44 @@ body {
   padding: 0;
   selection-background-color: #d4af3733;
   selection-color: #f3e5ab;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Developer Platform Hairline Borders & Glass */
+.dev-card {
+  background: rgba(17, 17, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dev-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  background: rgba(22, 22, 30, 0.85);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+.dev-border-gold {
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.dev-border-subtle {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Unified diff highlighting */
+.diff-line-add {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border-left: 2px solid #10b981;
+}
+
+.diff-line-del {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border-left: 2px solid #f43f5e;
 }
 
 /* Custom Scrollbar */
