@@ -8,6 +8,8 @@ import {
   vendorApiReleases,
   migrationPullRequests,
   apiKeys,
+  auditLogs,
+  webhookSimulatorEvents,
 } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -73,6 +75,20 @@ export async function GET(req: NextRequest) {
       orderBy: [desc(apiKeys.createdAt)],
     });
 
+    // 7. Fetch Recent Audit Logs
+    const recentAuditLogs = await db.query.auditLogs.findMany({
+      where: eq(auditLogs.orgId, session.orgId),
+      orderBy: [desc(auditLogs.createdAt)],
+      limit: 10,
+    });
+
+    // 8. Fetch Webhook Simulator Events
+    const recentWebhookEvents = await db.query.webhookSimulatorEvents.findMany({
+      where: eq(webhookSimulatorEvents.orgId, session.orgId),
+      orderBy: [desc(webhookSimulatorEvents.createdAt)],
+      limit: 10,
+    });
+
     return NextResponse.json({
       session,
       org,
@@ -80,6 +96,8 @@ export async function GET(req: NextRequest) {
       subscriptions,
       migrationPullRequests: prs,
       vendorReleases: releases,
+      auditLogs: recentAuditLogs,
+      webhookEvents: recentWebhookEvents,
       apiKeys: keys.map((k) => ({
         id: k.id,
         name: k.name,

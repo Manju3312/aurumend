@@ -13,6 +13,8 @@ import {
   Shield,
   Layers,
   ArrowRight,
+  Eye,
+  GitCompare,
 } from "lucide-react";
 
 interface ProducerViewProps {
@@ -91,7 +93,35 @@ export default function ProducerView({
   );
 
   const [publishing, setPublishing] = useState(false);
+  const [comparing, setComparing] = useState(false);
   const [publishResult, setPublishResult] = useState<any>(null);
+  const [previewDiff, setPreviewDiff] = useState<any>(null);
+
+  const handleQuickCompare = async () => {
+    setComparing(true);
+    setPreviewDiff(null);
+    try {
+      const res = await fetch("/api/v1/specs/compare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vendor_slug: vendorSlug,
+          version_tag: versionTag,
+          prev_spec: JSON.parse(prevSpec),
+          new_spec: JSON.parse(newSpec),
+          release_notes: releaseNotes,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPreviewDiff(data);
+      }
+    } catch (err: any) {
+      alert("Spec Comparison Error: " + err.message);
+    } finally {
+      setComparing(false);
+    }
+  };
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +158,7 @@ export default function ProducerView({
     <div className="space-y-8">
       {/* Top Telemetry & Adoption Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 rounded-2xl bg-[#111116]/80 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
+        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Customer Adoption Rate
           </div>
@@ -138,7 +168,7 @@ export default function ProducerView({
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111116]/80 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
+        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Subscribed Repositories
           </div>
@@ -148,7 +178,7 @@ export default function ProducerView({
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111116]/80 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
+        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Verified PRs Delivered
           </div>
@@ -158,7 +188,7 @@ export default function ProducerView({
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111116]/80 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
+        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
           <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
             Dev Hours Saved
           </div>
@@ -171,10 +201,12 @@ export default function ProducerView({
 
       {/* Success Banner */}
       {publishResult && (
-        <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 font-mono text-xs text-emerald-300 space-y-2">
+        <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 font-mono text-xs text-emerald-300 space-y-2 animate-fade-in shadow-xl">
           <div className="flex items-center gap-2 font-bold text-sm text-emerald-400">
             <CheckCircle2 className="w-5 h-5" />
-            <span>Release {publishResult.vendor_slug}@{publishResult.version_tag} Published & Dispatched!</span>
+            <span>
+              Release {publishResult.vendor_slug}@{publishResult.version_tag} Published & Dispatched!
+            </span>
           </div>
           <div>Breaking changes detected: <strong>{publishResult.breaking_changes_detected}</strong></div>
           <div>Customer repositories notified: <strong>{publishResult.subscribers_notified}</strong></div>
@@ -183,20 +215,52 @@ export default function ProducerView({
       )}
 
       {/* OpenAPI Spec Publisher Form */}
-      <div className="rounded-2xl bg-[#111116]/80 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl p-6 sm:p-8">
-        <div className="flex items-center gap-3 pb-4 border-b border-white/10 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center">
-            <UploadCloud className="w-5 h-5 text-[#F3E5AB]" />
+      <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/35 shadow-xl p-6 sm:p-8">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center">
+              <UploadCloud className="w-5 h-5 text-[#F3E5AB]" />
+            </div>
+            <div>
+              <h3 className="font-serif text-xl font-bold text-[#FAF9F6]">
+                Publish New API Spec Release
+              </h3>
+              <p className="text-xs text-[#A1A1AA]">
+                Oasdiff compares specs, Claude Sonnet generates the Migration Manifest, and Aurumend opens contract-verified PRs across all customer repos.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-serif text-xl font-bold text-[#FAF9F6]">
-              Publish New API Spec Release
-            </h3>
-            <p className="text-xs text-[#A1A1AA]">
-              Oasdiff compares specs, Claude Sonnet generates the Migration Manifest, and Aurumend opens contract-verified PRs across all customer repos.
-            </p>
-          </div>
+
+          <button
+            type="button"
+            onClick={handleQuickCompare}
+            disabled={comparing}
+            className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#070709] border border-white/10 hover:border-[#D4AF37]/50 text-xs font-mono text-zinc-300 hover:text-white cursor-pointer transition-all"
+          >
+            {comparing ? (
+              <RotateCw className="w-3.5 h-3.5 animate-spin text-[#D4AF37]" />
+            ) : (
+              <GitCompare className="w-3.5 h-3.5 text-[#D4AF37]" />
+            )}
+            <span>{comparing ? "Comparing..." : "Preview Diff & Manifest"}</span>
+          </button>
         </div>
+
+        {/* Live Diff Preview Box */}
+        {previewDiff && (
+          <div className="mb-6 p-4 rounded-xl bg-black/70 border border-[#D4AF37]/40 font-mono text-xs space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-[#F3E5AB]">
+              <span>Spec Comparison Preview</span>
+              <span className="text-emerald-400">
+                {previewDiff.diff.totalBreakingChanges} Breaking Change(s) Found
+              </span>
+            </div>
+            <p className="text-zinc-300 text-[11px]">{previewDiff.diff.summary}</p>
+            <div className="text-[10px] text-[#A1A1AA]">
+              Manifest Patterns: {previewDiff.manifest.ast_search_patterns.length} AST patterns synthesized by Claude Sonnet
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handlePublish} className="space-y-6 font-mono text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -271,7 +335,7 @@ export default function ProducerView({
           <button
             type="submit"
             disabled={publishing}
-            className="w-full py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515] text-[#070709] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515] text-[#070709] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xl"
           >
             {publishing ? (
               <>
@@ -289,7 +353,7 @@ export default function ProducerView({
       </div>
 
       {/* Published Releases History */}
-      <div className="rounded-2xl bg-[#111116]/80 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
+      <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
         <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div>
             <h3 className="font-serif text-base font-bold text-[#FAF9F6]">
@@ -319,7 +383,7 @@ export default function ProducerView({
             </div>
           ) : (
             vendorReleases.map((rel) => (
-              <div key={rel.id} className="p-4 flex items-center justify-between">
+              <div key={rel.id} className="p-4 flex items-center justify-between hover:bg-[#161622]/50 transition-colors">
                 <div>
                   <span className="text-[#FAF9F6] font-bold">
                     {rel.vendorSlug} @ {rel.versionTag}
@@ -339,4 +403,3 @@ export default function ProducerView({
     </div>
   );
 }
-

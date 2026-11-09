@@ -5,12 +5,17 @@ import RoyalAstCanvas from "@/components/canvas/RoyalAstCanvas";
 import Navbar from "@/components/landing/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
 import SplitScreenInteractiveDemo from "@/components/landing/SplitScreenInteractiveDemo";
+import CitadelBentoGrid from "@/components/landing/CitadelBentoGrid";
 import ArchitectureFlow from "@/components/landing/ArchitectureFlow";
 import DualEngineSection from "@/components/landing/DualEngineSection";
+import AuditStreamSection from "@/components/landing/AuditStreamSection";
+import RoiCalculator from "@/components/landing/RoiCalculator";
 import Footer from "@/components/landing/Footer";
+import GitHubConnectionModal from "@/components/dashboard/GitHubConnectionModal";
 
 export default function Home() {
   const [isSimulating, setIsSimulating] = useState(false);
+  const [githubModalOpen, setGithubModalOpen] = useState(false);
 
   const handleSimulateToggle = () => {
     setIsSimulating((prev) => !prev);
@@ -28,7 +33,7 @@ export default function Home() {
       />
 
       {/* Navigation */}
-      <Navbar />
+      <Navbar onOpenGitHubModal={() => setGithubModalOpen(true)} />
 
       {/* Hero Section */}
       <HeroSection
@@ -42,15 +47,31 @@ export default function Home() {
         onSimulateToggle={handleSimulateToggle}
       />
 
+      {/* Citadel Architecture Bento Grid */}
+      <CitadelBentoGrid />
+
       {/* 5-Step Architecture Flow */}
       <ArchitectureFlow />
 
       {/* Dual Engine Perspective (Producer vs Consumer) */}
       <DualEngineSection />
 
+      {/* Real-Time Protocol Telemetry Feed */}
+      <AuditStreamSection />
+
+      {/* Interactive ROI & Downtime Calculator */}
+      <RoiCalculator />
+
       {/* Footer */}
       <Footer />
+
+      {/* GitHub Connection Modal */}
+      <GitHubConnectionModal
+        isOpen={githubModalOpen}
+        onClose={() => setGithubModalOpen(false)}
+        installations={[]}
+        onRefreshData={() => {}}
+      />
     </main>
   );
 }
-

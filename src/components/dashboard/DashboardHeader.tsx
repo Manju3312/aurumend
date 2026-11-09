@@ -18,6 +18,7 @@ interface DashboardHeaderProps {
   orgName: string;
   orgSlug: string;
   onOpenKeyModal: () => void;
+  onOpenGitHubModal: () => void;
   installationsCount: number;
 }
 
@@ -27,6 +28,7 @@ export default function DashboardHeader({
   orgName,
   orgSlug,
   onOpenKeyModal,
+  onOpenGitHubModal,
   installationsCount,
 }: DashboardHeaderProps) {
   return (
@@ -92,15 +94,15 @@ export default function DashboardHeader({
             <span>API Keys</span>
           </button>
 
-          <a
-            href="/api/github/install"
-            className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wider uppercase bg-[#161622] hover:bg-[#1f1f2e] text-[#FAF9F6] border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 transition-all flex items-center gap-2 shadow"
+          <button
+            onClick={onOpenGitHubModal}
+            className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wider uppercase bg-[#161622] hover:bg-[#1f1f2e] text-[#FAF9F6] border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 transition-all flex items-center gap-2 shadow cursor-pointer group"
           >
-            <Github className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Github className="w-3.5 h-3.5 text-[#D4AF37] group-hover:scale-110 transition-transform" />
             <span>
               {installationsCount > 0 ? `${installationsCount} GitHub Linked` : "Connect GitHub App"}
             </span>
-          </a>
+          </button>
         </div>
       </div>
     </header>

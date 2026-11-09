@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyInstallState } from "@/lib/auth";
 import { db } from "@/db";
-import { githubInstallations, organizations } from "@/db/schema";
+import { githubInstallations, organizations, auditLogs } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getInstallationOctokit } from "@/lib/github-auth";
 
@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     const installationIdStr = searchParams.get("installation_id");
     const stateToken = searchParams.get("state");
     const setupAction = searchParams.get("setup_action");
+    const accountParam = searchParams.get("account");
 
     if (!installationIdStr) {
       return NextResponse.json(
@@ -43,7 +44,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Attempt to query GitHub for the account login, or use fallback
-    let accountLogin = "acme-corp";
+    let accountLogin = accountParam || "acme-corp";
     try {
       const { octokit } = await getInstallationOctokit(installationId);
       const { data: installationData } = await octokit.rest.apps.getInstallation({
@@ -78,6 +79,23 @@ export async function GET(req: NextRequest) {
         accountLogin,
         status: "active",
       });
+    }
+
+    // Record Sovereign Audit Log
+    try {
+      await db.insert(auditLogs).values({
+        orgId,
+        eventType: "github_installed",
+        title: `GitHub App Connected: ${accountLogin}`,
+        description: `Installation #${installationIdStr} linked to Aurumend Sovereign Protocol. JIT tokens and repo webhooks active.`,
+        metadataJson: {
+          installationId: installationIdStr,
+          account: accountLogin,
+          setupAction: setupAction || "install",
+        },
+      });
+    } catch (auditErr) {
+      console.warn("[Audit Log insertion warning]", auditErr);
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";

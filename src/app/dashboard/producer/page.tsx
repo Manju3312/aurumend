@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import ProducerView from "@/components/dashboard/ProducerView";
 import ApiKeyModal from "@/components/dashboard/ApiKeyModal";
+import GitHubConnectionModal from "@/components/dashboard/GitHubConnectionModal";
 import Footer from "@/components/landing/Footer";
 import { useRouter } from "next/navigation";
 
@@ -16,6 +17,7 @@ export default function ProducerDashboardPage() {
     apiKeys: [],
   });
   const [keyModalOpen, setKeyModalOpen] = useState(false);
+  const [githubModalOpen, setGithubModalOpen] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -44,6 +46,7 @@ export default function ProducerDashboardPage() {
           orgName={dashboardData.org?.name || "Aurumend Sovereign Corp"}
           orgSlug={dashboardData.org?.slug || "aurumend-corp"}
           onOpenKeyModal={() => setKeyModalOpen(true)}
+          onOpenGitHubModal={() => setGithubModalOpen(true)}
           installationsCount={dashboardData.installations?.length || 0}
         />
 
@@ -60,6 +63,13 @@ export default function ProducerDashboardPage() {
         onClose={() => setKeyModalOpen(false)}
         keys={dashboardData.apiKeys || []}
         onKeyCreated={fetchDashboardData}
+      />
+
+      <GitHubConnectionModal
+        isOpen={githubModalOpen}
+        onClose={() => setGithubModalOpen(false)}
+        installations={dashboardData.installations || []}
+        onRefreshData={fetchDashboardData}
       />
 
       <Footer />

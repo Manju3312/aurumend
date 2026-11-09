@@ -6,6 +6,7 @@ import ConsumerView from "@/components/dashboard/ConsumerView";
 import ProducerView from "@/components/dashboard/ProducerView";
 import SandboxLogModal from "@/components/dashboard/SandboxLogModal";
 import ApiKeyModal from "@/components/dashboard/ApiKeyModal";
+import GitHubConnectionModal from "@/components/dashboard/GitHubConnectionModal";
 import Footer from "@/components/landing/Footer";
 
 export default function DashboardPage() {
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const [sandboxRepo, setSandboxRepo] = useState("");
   const [sandboxBranch, setSandboxBranch] = useState("");
   const [keyModalOpen, setKeyModalOpen] = useState(false);
+  const [githubModalOpen, setGithubModalOpen] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -66,6 +68,7 @@ export default function DashboardPage() {
           orgName={dashboardData.org?.name || "Aurumend Sovereign Corp"}
           orgSlug={dashboardData.org?.slug || "aurumend-corp"}
           onOpenKeyModal={() => setKeyModalOpen(true)}
+          onOpenGitHubModal={() => setGithubModalOpen(true)}
           installationsCount={dashboardData.installations?.length || 0}
         />
 
@@ -75,8 +78,10 @@ export default function DashboardPage() {
             <ConsumerView
               subscriptions={dashboardData.subscriptions}
               migrationPrs={dashboardData.migrationPullRequests}
+              auditLogs={dashboardData.auditLogs || []}
               onOpenSandboxModal={handleOpenSandboxLogs}
               onRefreshData={fetchDashboardData}
+              onOpenGitHubModal={() => setGithubModalOpen(true)}
             />
           ) : (
             <ProducerView
@@ -102,6 +107,14 @@ export default function DashboardPage() {
         onClose={() => setKeyModalOpen(false)}
         keys={dashboardData.apiKeys || []}
         onKeyCreated={fetchDashboardData}
+      />
+
+      {/* GitHub Connection Modal */}
+      <GitHubConnectionModal
+        isOpen={githubModalOpen}
+        onClose={() => setGithubModalOpen(false)}
+        installations={dashboardData.installations || []}
+        onRefreshData={fetchDashboardData}
       />
 
       <Footer />

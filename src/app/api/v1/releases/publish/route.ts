@@ -3,7 +3,7 @@ import { validateBearerApiKey, getSession } from "@/lib/auth";
 import { computeOpenApiDiff } from "@/lib/openapi-diff";
 import { generateMigrationManifest } from "@/lib/manifest-generator";
 import { db } from "@/db";
-import { vendorApiReleases, repoApiSubscriptions, migrationPullRequests } from "@/db/schema";
+import { vendorApiReleases, repoApiSubscriptions, migrationPullRequests, auditLogs } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
@@ -112,6 +112,24 @@ export async function POST(req: NextRequest) {
         migrationPrId: prRecord.id,
         status: "testing",
       });
+    }
+
+    // Record Sovereign Audit Log
+    try {
+      await db.insert(auditLogs).values({
+        orgId: vendorOrgId,
+        eventType: "spec_diffed",
+        title: `API Release Published: ${vendor_slug}@${version_tag}`,
+        description: `Ingested OpenAPI v3 spec with ${diff.totalBreakingChanges} breaking change(s). Notified ${subscribers.length} subscriber repositories.`,
+        metadataJson: {
+          vendorSlug: vendor_slug,
+          versionTag: version_tag,
+          breakingChangesCount: diff.totalBreakingChanges,
+          subscribersCount: subscribers.length,
+        },
+      });
+    } catch (auditErr) {
+      console.warn("[Audit Log warning]:", auditErr);
     }
 
     return NextResponse.json({

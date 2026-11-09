@@ -18,15 +18,14 @@ export async function GET(req: NextRequest) {
       !process.env.GITHUB_APP_PRIVATE_KEY.includes("RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0") &&
       process.env.GITHUB_APP_CLIENT_SECRET;
 
-    const appSlug =
-      process.env.NEXT_PUBLIC_GITHUB_APP_SLUG ||
-      process.env.GITHUB_APP_SLUG;
+    const accountParam = searchParams.get("account") || "acme-corp";
+    const requestedAppSlug = searchParams.get("app_slug") || process.env.NEXT_PUBLIC_GITHUB_APP_SLUG || process.env.GITHUB_APP_SLUG;
 
     const forceLive = searchParams.get("live") === "true";
 
-    // If a custom live GitHub App is configured or user explicitly requested live redirect
-    if (isLiveConfigured || forceLive) {
-      const installUrl = `https://github.com/apps/${appSlug || "aurumend-bot"}/installations/new?state=${encodeURIComponent(
+    // Only redirect to github.com if a custom registered app slug is provided (avoiding 404 for un-registered placeholder slugs)
+    if ((isLiveConfigured || forceLive) && requestedAppSlug && requestedAppSlug !== "aurumend-bot") {
+      const installUrl = `https://github.com/apps/${requestedAppSlug}/installations/new?state=${encodeURIComponent(
         stateToken
       )}`;
       return NextResponse.redirect(installUrl);
@@ -37,7 +36,7 @@ export async function GET(req: NextRequest) {
     const simulatedInstallationId = Math.floor(10000000 + Math.random() * 90000000).toString();
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-    const callbackUrl = `${baseUrl}/api/github/callback?installation_id=${simulatedInstallationId}&state=${encodeURIComponent(
+    const callbackUrl = `${baseUrl}/api/github/callback?installation_id=${simulatedInstallationId}&account=${encodeURIComponent(accountParam)}&state=${encodeURIComponent(
       stateToken
     )}&setup_action=install`;
 

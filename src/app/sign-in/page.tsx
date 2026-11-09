@@ -5,11 +5,13 @@ import RoyalAstCanvas from "@/components/canvas/RoyalAstCanvas";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Github, Sparkles, Shield, ArrowRight, Lock, KeyRound, Building2 } from "lucide-react";
+import GitHubConnectionModal from "@/components/dashboard/GitHubConnectionModal";
 
 export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("architect@aurumend.io");
   const [loading, setLoading] = useState(false);
+  const [githubModalOpen, setGithubModalOpen] = useState(false);
 
   const handleQuickLogin = async (role: "consumer" | "producer" | "hybrid" = "hybrid") => {
     setLoading(true);
@@ -67,16 +69,23 @@ export default function SignInPage() {
           <button
             onClick={() => handleQuickLogin("consumer")}
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#161622] hover:bg-[#1f1f2e] text-[#FAF9F6] border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 transition-all flex items-center justify-center gap-3 shadow-md"
+            className="w-full py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#161622] hover:bg-[#1f1f2e] text-[#FAF9F6] border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 transition-all flex items-center justify-center gap-3 shadow-md cursor-pointer group"
           >
-            <Github className="w-4 h-4 text-[#D4AF37]" />
+            <Github className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 transition-transform" />
             <span>Continue with GitHub App</span>
+          </button>
+
+          <button
+            onClick={() => setGithubModalOpen(true)}
+            className="w-full py-2 px-3 rounded-lg text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] hover:text-[#F3E5AB] bg-black/40 hover:bg-black/70 border border-white/5 hover:border-[#D4AF37]/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Custom GitHub App Setup / Sandbox</span>
           </button>
 
           <button
             onClick={() => handleQuickLogin("producer")}
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#161622] hover:bg-[#1f1f2e] text-[#FAF9F6] border border-white/10 hover:border-white/30 transition-all flex items-center justify-center gap-3"
+            className="w-full py-3 px-4 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#161622] hover:bg-[#1f1f2e] text-[#FAF9F6] border border-white/10 hover:border-white/30 transition-all flex items-center justify-center gap-3 cursor-pointer"
           >
             <Building2 className="w-4 h-4 text-[#F3E5AB]" />
             <span>Enterprise SAML / Okta SSO</span>
@@ -126,6 +135,13 @@ export default function SignInPage() {
           </span>
         </div>
       </div>
+
+      <GitHubConnectionModal
+        isOpen={githubModalOpen}
+        onClose={() => setGithubModalOpen(false)}
+        installations={[]}
+        onRefreshData={() => router.push("/dashboard")}
+      />
     </div>
   );
 }

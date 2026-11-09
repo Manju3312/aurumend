@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { indexCustomerRepository } from "@/lib/ast-indexer";
 import { db } from "@/db";
-import { githubInstallations, repoApiSubscriptions } from "@/db/schema";
+import { githubInstallations, repoApiSubscriptions, auditLogs } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getInstallationOctokit } from "@/lib/github-auth";
 
@@ -85,6 +85,24 @@ export async function extractProductDetails(prompt: string) {
       repoFullName,
       files,
     });
+
+    // Record Sovereign Audit Log
+    try {
+      await db.insert(auditLogs).values({
+        orgId: session.orgId,
+        eventType: "ast_indexed",
+        title: `AST Index Completed: ${repoFullName}`,
+        description: `@ast-grep indexed ${result.filesScanned} files. Detected ${result.detectedVendors.join(", ")} with ${result.matches.length} AST call-sites.`,
+        metadataJson: {
+          repoFullName,
+          filesScanned: result.filesScanned,
+          detectedVendors: result.detectedVendors,
+          matchesCount: result.matches.length,
+        },
+      });
+    } catch (auditErr) {
+      console.warn("[Audit Log warning]:", auditErr);
+    }
 
     return NextResponse.json({
       success: true,

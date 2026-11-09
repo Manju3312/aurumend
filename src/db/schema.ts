@@ -167,6 +167,8 @@ export const migrationPullRequests = pgTable(
     status: prStatusEnum("status").default("testing").notNull(),
     branchName: varchar("branch_name", { length: 255 }),
     diffSummary: text("diff_summary"),
+    mergeCommitSha: varchar("merge_commit_sha", { length: 64 }),
+    mergedAt: timestamp("merged_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
@@ -178,6 +180,48 @@ export const migrationPullRequests = pgTable(
   ]
 );
 
+// 8. Sovereign Audit & Telemetry Log
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    eventType: varchar("event_type", { length: 64 }).notNull(), // e.g. "spec_diffed", "ast_indexed", "sandbox_verified", "pr_opened", "pr_merged"
+    title: varchar("title", { length: 255 }).notNull(),
+    description: text("description"),
+    metadataJson: jsonb("metadata_json").default({}).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("audit_org_idx").on(table.orgId),
+    index("audit_event_type_idx").on(table.eventType),
+    index("audit_created_at_idx").on(table.createdAt),
+  ]
+);
+
+// 9. Webhook Simulation Events (For real-time testing of incoming webhooks)
+export const webhookSimulatorEvents = pgTable(
+  "webhook_simulator_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    vendorSlug: varchar("vendor_slug", { length: 255 }).notNull(),
+    eventType: varchar("event_type", { length: 255 }).notNull(),
+    payloadJson: jsonb("payload_json").notNull(),
+    responseStatus: bigint("response_status", { mode: "number" }).default(200),
+    responseBody: text("response_body"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("webhook_events_org_idx").on(table.orgId),
+    index("webhook_events_vendor_idx").on(table.vendorSlug),
+  ]
+);
+
 // Relations Definitions
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   members: many(orgMemberships),
@@ -186,6 +230,8 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   vendorReleases: many(vendorApiReleases),
   repoSubscriptions: many(repoApiSubscriptions),
   migrationPullRequests: many(migrationPullRequests),
+  auditLogs: many(auditLogs),
+  webhookEvents: many(webhookSimulatorEvents),
 }));
 
 export const orgMembershipsRelations = relations(orgMemberships, ({ one }) => ({
@@ -240,6 +286,20 @@ export const migrationPullRequestsRelations = relations(migrationPullRequests, (
   }),
 }));
 
+export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [auditLogs.orgId],
+    references: [organizations.id],
+  }),
+}));
+
+export const webhookSimulatorEventsRelations = relations(webhookSimulatorEvents, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [webhookSimulatorEvents.orgId],
+    references: [organizations.id],
+  }),
+}));
+
 // Inferred TypeScript Types
 export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
@@ -262,3 +322,8 @@ export type NewRepoApiSubscription = typeof repoApiSubscriptions.$inferInsert;
 export type MigrationPullRequest = typeof migrationPullRequests.$inferSelect;
 export type NewMigrationPullRequest = typeof migrationPullRequests.$inferInsert;
 
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type NewAuditLog = typeof auditLogs.$inferInsert;
+
+export type WebhookSimulatorEvent = typeof webhookSimulatorEvents.$inferSelect;
+export type NewWebhookSimulatorEvent = typeof webhookSimulatorEvents.$inferInsert;

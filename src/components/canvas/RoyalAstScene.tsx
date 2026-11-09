@@ -8,11 +8,10 @@ import * as THREE from "three";
 
 interface RoyalAstSceneProps {
   isSimulating?: boolean;
-  onSimulateComplete?: () => void;
 }
 
-// Cubic Bezier curve for the neural bridge
-function GoldenNeuralBridge({
+// Glowing Twin Neural Conduits (Bezier Splines)
+function GoldenDualBridge({
   start,
   end,
   isSimulating,
@@ -21,221 +20,304 @@ function GoldenNeuralBridge({
   end: [number, number, number];
   isSimulating: boolean;
 }) {
-  const pulseRef = useRef<THREE.Mesh>(null);
-  const pulseProgress = useRef(0);
-  const pulseLightRef = useRef<THREE.PointLight>(null);
+  const pulseRef1 = useRef<THREE.Mesh>(null);
+  const pulseRef2 = useRef<THREE.Mesh>(null);
+  const progress1 = useRef(0);
+  const progress2 = useRef(0.5);
 
-  const curve = useMemo(() => {
+  const [curve1, curve2] = useMemo(() => {
     const vStart = new THREE.Vector3(...start);
     const vEnd = new THREE.Vector3(...end);
-    const mid1 = new THREE.Vector3(
+
+    // Spline 1 arches upward
+    const mid1A = new THREE.Vector3(
       start[0] + (end[0] - start[0]) * 0.35,
-      start[1] + 2.2,
+      start[1] + 2.4,
       start[2] + 1.2
     );
-    const mid2 = new THREE.Vector3(
+    const mid1B = new THREE.Vector3(
       start[0] + (end[0] - start[0]) * 0.65,
-      end[1] - 1.8,
+      end[1] - 1.2,
       start[2] - 1.0
     );
-    return new THREE.CubicBezierCurve3(vStart, mid1, mid2, vEnd);
+    const c1 = new THREE.CubicBezierCurve3(vStart, mid1A, mid1B, vEnd);
+
+    // Spline 2 arches downward/forward
+    const mid2A = new THREE.Vector3(
+      start[0] + (end[0] - start[0]) * 0.35,
+      start[1] - 1.8,
+      start[2] - 1.2
+    );
+    const mid2B = new THREE.Vector3(
+      start[0] + (end[0] - start[0]) * 0.65,
+      end[1] + 1.8,
+      start[2] + 1.0
+    );
+    const c2 = new THREE.CubicBezierCurve3(vStart, mid2A, mid2B, vEnd);
+
+    return [c1, c2];
   }, [start, end]);
 
-  const tubeGeometry = useMemo(() => {
-    return new THREE.TubeGeometry(curve, 72, 0.045, 12, false);
-  }, [curve]);
+  const tube1 = useMemo(() => new THREE.TubeGeometry(curve1, 80, 0.038, 12, false), [curve1]);
+  const tube2 = useMemo(() => new THREE.TubeGeometry(curve2, 80, 0.028, 12, false), [curve2]);
 
   useFrame((_, delta) => {
-    if (!pulseRef.current) return;
-    const speed = isSimulating ? 1.4 : 0.28;
-    pulseProgress.current = (pulseProgress.current + delta * speed) % 1;
+    const speed = isSimulating ? 1.6 : 0.32;
 
-    const point = curve.getPoint(pulseProgress.current);
-    pulseRef.current.position.copy(point);
+    progress1.current = (progress1.current + delta * speed) % 1;
+    progress2.current = (progress2.current + delta * (speed * 1.15)) % 1;
 
-    if (pulseLightRef.current) {
-      pulseLightRef.current.position.copy(point);
-      pulseLightRef.current.intensity = isSimulating ? 3.5 : 1.2;
+    if (pulseRef1.current) {
+      pulseRef1.current.position.copy(curve1.getPoint(progress1.current));
+    }
+    if (pulseRef2.current) {
+      pulseRef2.current.position.copy(curve2.getPoint(progress2.current));
     }
   });
 
   return (
     <group>
-      {/* Golden Conduit Tube */}
-      <mesh geometry={tubeGeometry}>
+      {/* Primary Gold Conduit */}
+      <mesh geometry={tube1}>
         <meshStandardMaterial
           color="#996515"
           emissive="#D4AF37"
-          emissiveIntensity={0.45}
-          metalness={0.96}
-          roughness={0.18}
+          emissiveIntensity={isSimulating ? 1.2 : 0.5}
+          metalness={0.97}
+          roughness={0.12}
           transparent
           opacity={0.88}
         />
       </mesh>
 
-      {/* Pulsing Liquid Gold Bead */}
-      <mesh ref={pulseRef}>
-        <sphereGeometry args={[0.16, 24, 24]} />
+      {/* Secondary Resonant Conduit */}
+      <mesh geometry={tube2}>
         <meshStandardMaterial
-          color="#F3E5AB"
-          emissive="#FAF9F6"
-          emissiveIntensity={isSimulating ? 3.2 : 1.8}
+          color="#D4AF37"
+          emissive="#F3E5AB"
+          emissiveIntensity={isSimulating ? 0.9 : 0.35}
+          metalness={0.98}
+          roughness={0.14}
+          transparent
+          opacity={0.65}
+        />
+      </mesh>
+
+      {/* Pulsing Liquid Gold Beads */}
+      <mesh ref={pulseRef1}>
+        <sphereGeometry args={[0.15, 24, 24]} />
+        <meshStandardMaterial
+          color="#FAF9F6"
+          emissive="#F3E5AB"
+          emissiveIntensity={isSimulating ? 4.2 : 2.2}
           metalness={0.99}
           roughness={0.05}
         />
       </mesh>
 
-      <pointLight
-        ref={pulseLightRef}
-        color="#F3E5AB"
-        distance={4.5}
-        decay={2}
-        intensity={1.5}
-      />
+      <mesh ref={pulseRef2}>
+        <sphereGeometry args={[0.11, 20, 20]} />
+        <meshStandardMaterial
+          color="#D4AF37"
+          emissive="#FAF9F6"
+          emissiveIntensity={isSimulating ? 3.6 : 1.8}
+          metalness={0.99}
+          roughness={0.05}
+        />
+      </mesh>
     </group>
   );
 }
 
-// Dark Obsidian Polyhedron Node (Producer or Consumer)
-function ObsidianNode({
+// Royal Obsidian Monolith with Gyroscopic Gilded Rings
+function ObsidianMonolith({
   position,
+  scale = 1.0,
   role,
   isFractured,
   isHealed,
 }: {
   position: [number, number, number];
-  role: "producer" | "consumer";
+  scale?: number;
+  role: "producer" | "consumer" | "sentinel";
   isFractured?: boolean;
   isHealed?: boolean;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const ringRef1 = useRef<THREE.Mesh>(null);
-  const ringRef2 = useRef<THREE.Mesh>(null);
+  const ring1Ref = useRef<THREE.Mesh>(null);
+  const ring2Ref = useRef<THREE.Mesh>(null);
+  const ring3Ref = useRef<THREE.Mesh>(null);
 
   useFrame((_, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.4;
-      meshRef.current.rotation.x += delta * 0.2;
+      meshRef.current.rotation.y += delta * 0.35;
+      meshRef.current.rotation.x += delta * 0.18;
     }
-    if (ringRef1.current) {
-      ringRef1.current.rotation.z += delta * 0.7;
-      ringRef1.current.rotation.x += delta * 0.35;
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.z += delta * 0.65;
+      ring1Ref.current.rotation.x += delta * 0.3;
     }
-    if (ringRef2.current) {
-      ringRef2.current.rotation.y -= delta * 0.55;
-      ringRef2.current.rotation.z += delta * 0.25;
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.y -= delta * 0.55;
+      ring2Ref.current.rotation.z += delta * 0.25;
+    }
+    if (ring3Ref.current) {
+      ring3Ref.current.rotation.x += delta * 0.45;
+      ring3Ref.current.rotation.y += delta * 0.35;
     }
   });
 
-  const nodeColor = isFractured && !isHealed ? "#2c0e12" : "#0e0e13";
+  const nodeColor = isFractured && !isHealed ? "#2c0e12" : "#0a0a0f";
   const emissiveColor = isFractured && !isHealed ? "#ef4444" : isHealed ? "#D4AF37" : "#996515";
-  const emissiveIntensity = isFractured && !isHealed ? 0.9 : isHealed ? 1.6 : 0.3;
+  const emissiveIntensity = isFractured && !isHealed ? 1.0 : isHealed ? 1.8 : 0.35;
 
   return (
-    <group position={position}>
-      {/* Obsidian Polyhedron */}
+    <group position={position} scale={scale}>
+      {/* Dark Obsidian Polyhedron Core */}
       <mesh ref={meshRef}>
         <octahedronGeometry args={[1.2, 0]} />
         <meshStandardMaterial
           color={nodeColor}
           emissive={emissiveColor}
           emissiveIntensity={emissiveIntensity}
-          metalness={0.94}
-          roughness={0.16}
+          metalness={0.96}
+          roughness={0.14}
         />
       </mesh>
 
-      {/* Digital Kintsugi Golden Veins (Visible when healing/healed or active) */}
-      <mesh scale={1.04}>
+      {/* Digital Kintsugi Wireframe Veins */}
+      <mesh scale={1.03}>
         <octahedronGeometry args={[1.2, 1]} />
         <meshStandardMaterial
           wireframe
           color="#D4AF37"
           emissive="#F3E5AB"
-          emissiveIntensity={isHealed ? 1.8 : 0.4}
+          emissiveIntensity={isHealed ? 2.0 : 0.4}
           transparent
-          opacity={isHealed ? 0.85 : 0.3}
+          opacity={isHealed ? 0.9 : 0.3}
         />
       </mesh>
 
-      {/* Golden Orbital Ring 1 */}
-      <mesh ref={ringRef1}>
-        <torusGeometry args={[1.75, 0.022, 16, 64]} />
+      {/* Gyroscopic Ring 1 (Equatorial) */}
+      <mesh ref={ring1Ref}>
+        <torusGeometry args={[1.75, 0.024, 16, 64]} />
         <meshStandardMaterial
           color="#D4AF37"
           emissive="#996515"
           emissiveIntensity={0.6}
           metalness={0.98}
-          roughness={0.12}
+          roughness={0.08}
         />
       </mesh>
 
-      {/* Golden Orbital Ring 2 */}
-      <mesh ref={ringRef2} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[2.05, 0.016, 16, 64]} />
+      {/* Gyroscopic Ring 2 (Polar 45 deg) */}
+      <mesh ref={ring2Ref} rotation={[Math.PI / 3, 0, 0]}>
+        <torusGeometry args={[2.05, 0.018, 16, 64]} />
         <meshStandardMaterial
           color="#F3E5AB"
           emissive="#D4AF37"
-          emissiveIntensity={0.4}
+          emissiveIntensity={0.5}
           metalness={0.98}
           roughness={0.1}
           transparent
-          opacity={0.7}
+          opacity={0.8}
+        />
+      </mesh>
+
+      {/* Gyroscopic Ring 3 (Outer Horizon) */}
+      <mesh ref={ring3Ref} rotation={[0, Math.PI / 4, Math.PI / 3]}>
+        <torusGeometry args={[2.35, 0.012, 16, 64]} />
+        <meshStandardMaterial
+          color="#996515"
+          emissive="#F3E5AB"
+          emissiveIntensity={0.3}
+          metalness={0.98}
+          roughness={0.12}
+          transparent
+          opacity={0.5}
         />
       </mesh>
     </group>
   );
 }
 
-// Swirling Golden Embers & Dust Field
-function GoldenEmbers({ count = 180 }: { count?: number }) {
+// Floating Golden Pyramids / Shards in Deep Space
+function FloatingGoldShards({ count = 18 }: { count?: number }) {
+  const shards = useMemo(() => {
+    return Array.from({ length: count }).map((_, i) => ({
+      position: [
+        (Math.random() - 0.5) * 22,
+        (Math.random() - 0.5) * 14,
+        (Math.random() - 0.5) * 10 - 2,
+      ] as [number, number, number],
+      scale: Math.random() * 0.25 + 0.12,
+      rotationSpeed: Math.random() * 0.6 + 0.2,
+    }));
+  }, [count]);
+
+  return (
+    <group>
+      {shards.map((s, idx) => (
+        <Float key={idx} speed={1.2} rotationIntensity={0.5} floatIntensity={0.8}>
+          <mesh position={s.position} scale={s.scale}>
+            <tetrahedronGeometry args={[1, 0]} />
+            <meshStandardMaterial
+              color="#D4AF37"
+              emissive="#996515"
+              emissiveIntensity={0.4}
+              metalness={0.98}
+              roughness={0.12}
+            />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
+// Golden Starfield / Embers Dust
+function RoyalDustField({ count = 220 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
 
-  const [positions, scales] = useMemo(() => {
+  const [positions] = useMemo(() => {
     const pos = new Float32Array(count * 3);
-    const sc = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 24;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 16;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 16;
-      sc[i] = Math.random() * 0.08 + 0.02;
+      pos[i * 3] = (Math.random() - 0.5) * 28;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 18;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 18;
     }
-    return [pos, sc];
+    return [pos];
   }, [count]);
 
   useFrame((_, delta) => {
     if (!pointsRef.current) return;
-    pointsRef.current.rotation.y += delta * 0.04;
-    pointsRef.current.rotation.x += delta * 0.015;
+    pointsRef.current.rotation.y += delta * 0.035;
+    pointsRef.current.rotation.x += delta * 0.012;
   });
 
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
         color="#F3E5AB"
-        size={0.06}
+        size={0.055}
         sizeAttenuation
         transparent
-        opacity={0.65}
+        opacity={0.7}
         blending={THREE.AdditiveBlending}
       />
     </points>
   );
 }
 
-// Camera parallax mouse controller
+// Smooth Camera Parallax Controller
 function ParallaxRig() {
   const { camera, mouse } = useThree();
   useFrame(() => {
-    camera.position.x += (mouse.x * 0.8 - camera.position.x) * 0.03;
-    camera.position.y += (mouse.y * 0.5 + 0.5 - camera.position.y) * 0.03;
+    camera.position.x += (mouse.x * 0.7 - camera.position.x) * 0.025;
+    camera.position.y += (mouse.y * 0.4 + 0.3 - camera.position.y) * 0.025;
     camera.lookAt(0, 0, 0);
   });
   return null;
@@ -244,59 +326,70 @@ function ParallaxRig() {
 export default function RoyalAstScene({
   isSimulating = false,
 }: RoyalAstSceneProps) {
-  // Positions of nodes
-  const producerPos: [number, number, number] = [-4.6, 0.4, 0];
-  const consumerPos: [number, number, number] = [4.6, -0.4, 0];
+  const producerPos: [number, number, number] = [-4.8, 0.3, 0];
+  const consumerPos: [number, number, number] = [4.8, -0.3, 0];
+  const sentinelPos: [number, number, number] = [0, 2.6, -3];
 
   return (
     <div className="w-full h-full absolute inset-0 -z-10 pointer-events-auto">
       <Canvas
-        camera={{ position: [0, 0.5, 9.8], fov: 45 }}
+        camera={{ position: [0, 0.4, 9.6], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
       >
         <color attach="background" args={["#070709"]} />
 
-        {/* Ambient & Directional Lighting */}
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[6, 8, 5]} intensity={1.5} color="#FAF9F6" />
-        <directionalLight position={[-6, -4, -3]} intensity={0.8} color="#996515" />
-        <pointLight position={[0, 3, 2]} intensity={2.0} color="#D4AF37" distance={12} />
+        {/* Ambient & Directional Royal Lighting */}
+        <ambientLight intensity={0.45} />
+        <directionalLight position={[7, 9, 6]} intensity={1.8} color="#FAF9F6" />
+        <directionalLight position={[-7, -5, -4]} intensity={1.1} color="#996515" />
+        <pointLight position={[0, 3, 2]} intensity={2.4} color="#D4AF37" distance={14} />
 
-        {/* Parallax & Float Rig */}
         <ParallaxRig />
 
-        <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.6}>
-          {/* Producer Node: API Vendor */}
-          <ObsidianNode
+        <Float speed={1.4} rotationIntensity={0.25} floatIntensity={0.5}>
+          {/* Producer Monolith (Stripe/OpenAI) */}
+          <ObsidianMonolith
             position={producerPos}
             role="producer"
+            scale={1.05}
           />
 
-          {/* Consumer Node: Customer Repo */}
-          <ObsidianNode
+          {/* Consumer Monolith (Customer Repositories) */}
+          <ObsidianMonolith
             position={consumerPos}
             role="consumer"
+            scale={1.05}
             isFractured={isSimulating}
             isHealed={!isSimulating}
           />
 
-          {/* Golden Neural Kintsugi Bridge */}
-          <GoldenNeuralBridge
+          {/* Sovereign Sentinel Monolith (Center Background Core) */}
+          <ObsidianMonolith
+            position={sentinelPos}
+            role="sentinel"
+            scale={0.7}
+          />
+
+          {/* Twin Pulsing Golden Neural Bridges */}
+          <GoldenDualBridge
             start={producerPos}
             end={consumerPos}
             isSimulating={isSimulating}
           />
         </Float>
 
-        {/* Ambient Gold Embers */}
-        <GoldenEmbers count={160} />
+        {/* Floating Geometric Shards */}
+        <FloatingGoldShards count={20} />
+
+        {/* Golden Stardust Field */}
+        <RoyalDustField count={220} />
 
         {/* Postprocessing Bloom */}
         <EffectComposer multisampling={4}>
           <Bloom
-            luminanceThreshold={0.3}
-            luminanceSmoothing={0.85}
-            intensity={1.2}
+            luminanceThreshold={0.28}
+            luminanceSmoothing={0.88}
+            intensity={1.35}
             mipmapBlur
           />
         </EffectComposer>
