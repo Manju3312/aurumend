@@ -1,17 +1,6 @@
 "use client";
 
 import React from "react";
-import {
-  Shield,
-  Cpu,
-  Lock,
-  Zap,
-  Terminal,
-  Layers,
-  Sparkles,
-  ArrowRight,
-  CheckCircle,
-} from "lucide-react";
 
 export default function CitadelBentoGrid() {
   const pillars = [
@@ -42,18 +31,18 @@ export default function CitadelBentoGrid() {
   ];
 
   return (
-    <section className="py-24 px-6 max-w-7xl mx-auto relative z-10">
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-          <span className="text-xs font-mono uppercase text-[#A1A1AA]">
+    <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
+      <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F5F3EC] border border-[#E5DAC1] shadow-xs mb-3">
+          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#8C6515] font-bold">
             Engineering Standard
           </span>
         </div>
-        <h2 className="font-sans text-3xl sm:text-5xl font-bold tracking-tight text-[#FAF9F6] mb-4">
-          Architected for <span className="text-amber-300">zero regressions</span>.
+        <h2 className="font-sans text-3xl sm:text-5xl font-black tracking-tight text-[#0A0A0A] mb-4">
+          Architected for <span className="text-[#BA8C28]">zero regressions</span>.
         </h2>
-        <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#4B5563] leading-relaxed">
           Engineered to replace fragile regex replacements and manual PR reviews with deterministic AST transforms and mock contract validation.
         </p>
       </div>
@@ -62,26 +51,26 @@ export default function CitadelBentoGrid() {
         {pillars.map((p, idx) => (
           <div
             key={idx}
-            className="rounded-2xl dev-card p-6 flex flex-col justify-between shadow-lg"
+            className="rounded-2xl bg-white border border-[#E5DAC1] p-6 flex flex-col justify-between shadow-xs hover:border-[#BA8C28] transition-all"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono font-bold text-zinc-500">
+                <span className="text-xs font-mono font-bold text-[#71717A]">
                   0{idx + 1}
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-amber-300 border border-white/[0.08]">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F5F3EC] text-[#8C6515] border border-[#E5DAC1] font-semibold">
                   {p.badge}
                 </span>
               </div>
-              <h3 className="font-sans text-base font-semibold text-[#FAF9F6] mb-2">
+              <h3 className="font-sans text-base font-bold text-[#0A0A0A] mb-2">
                 {p.title}
               </h3>
-              <p className="text-xs text-[#A1A1AA] leading-relaxed mb-6 font-sans">
+              <p className="text-xs text-[#4B5563] leading-relaxed mb-6 font-sans">
                 {p.desc}
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#08080c] border border-white/[0.05] font-mono text-[10px] text-zinc-300 overflow-x-auto">
+            <div className="p-3 rounded-xl bg-[#0D0D11] border border-[#E5DAC1]/50 font-mono text-[10px] text-zinc-300 overflow-x-auto">
               <pre>{p.code}</pre>
             </div>
           </div>

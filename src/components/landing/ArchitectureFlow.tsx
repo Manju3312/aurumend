@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { GitBranch, Shield, Cpu, RefreshCw, Box, CheckCircle } from "lucide-react";
 
 export default function ArchitectureFlow() {
   const steps = [
@@ -38,18 +37,18 @@ export default function ArchitectureFlow() {
   ];
 
   return (
-    <section id="architecture" className="py-24 px-6 max-w-7xl mx-auto relative z-10">
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-          <span className="text-xs font-mono uppercase text-[#A1A1AA]">
+    <section id="architecture" className="py-20 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
+      <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F5F3EC] border border-[#E5DAC1] shadow-xs mb-3">
+          <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#8C6515] font-bold">
             End-to-End Pipeline
           </span>
         </div>
-        <h2 className="font-sans text-3xl sm:text-5xl font-bold tracking-tight text-[#FAF9F6] mb-4">
-          How upstream releases become <span className="text-amber-300">verified PRs</span>.
+        <h2 className="font-sans text-3xl sm:text-5xl font-black tracking-tight text-[#0A0A0A] mb-4">
+          How upstream releases become <span className="text-[#BA8C28]">verified PRs</span>.
         </h2>
-        <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#4B5563] leading-relaxed">
           From the instant a vendor publishes a new schema version to when your tests run, every step is automated, auditable, and deterministic.
         </p>
       </div>
@@ -58,21 +57,21 @@ export default function ArchitectureFlow() {
         {steps.map((s, idx) => (
           <div
             key={idx}
-            className="p-5 rounded-2xl dev-card flex flex-col justify-between shadow-md"
+            className="p-5 rounded-2xl bg-white border border-[#E5DAC1] flex flex-col justify-between shadow-xs hover:border-[#BA8C28] transition-all"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="font-mono text-xl font-bold text-amber-300/80">
+                <span className="font-mono text-xl font-bold text-[#BA8C28]">
                   {s.num}
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.05] text-zinc-400 border border-white/[0.08]">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F5F3EC] text-[#8C6515] border border-[#E5DAC1] font-semibold">
                   {s.badge}
                 </span>
               </div>
-              <h3 className="font-sans text-sm font-semibold text-[#FAF9F6] mb-2">
+              <h3 className="font-sans text-sm font-bold text-[#0A0A0A] mb-2">
                 {s.title}
               </h3>
-              <p className="font-sans text-xs text-[#A1A1AA] leading-relaxed">
+              <p className="font-sans text-xs text-[#4B5563] leading-relaxed">
                 {s.desc}
               </p>
             </div>

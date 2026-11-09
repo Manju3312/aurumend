@@ -6,14 +6,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   RotateCw,
-  Sparkles,
-  BarChart3,
-  Users,
-  FileCode,
-  Shield,
-  Layers,
-  ArrowRight,
-  Eye,
   GitCompare,
 } from "lucide-react";
 
@@ -58,7 +50,6 @@ export default function ProducerView({
       2
     )
   );
-
   const [newSpec, setNewSpec] = useState(
     JSON.stringify(
       {
@@ -67,18 +58,18 @@ export default function ProducerView({
         paths: {
           "/v1/payment_intents": {
             post: {
-              summary: "Create PaymentIntent",
+              summary: "Create Payment Intent",
               requestBody: {
                 content: {
                   "application/json": {
                     schema: {
                       type: "object",
-                      required: ["payment_method"],
                       properties: {
                         amount: { type: "integer" },
                         payment_method: { type: "string" },
                         confirm: { type: "boolean" },
                       },
+                      required: ["amount", "payment_method"],
                     },
                   },
                 },
@@ -94,28 +85,23 @@ export default function ProducerView({
 
   const [publishing, setPublishing] = useState(false);
   const [comparing, setComparing] = useState(false);
+  const [diffResult, setDiffResult] = useState<any>(null);
   const [publishResult, setPublishResult] = useState<any>(null);
-  const [previewDiff, setPreviewDiff] = useState<any>(null);
 
-  const handleQuickCompare = async () => {
+  const handleCompareSpecs = async () => {
     setComparing(true);
-    setPreviewDiff(null);
+    setDiffResult(null);
     try {
       const res = await fetch("/api/v1/specs/compare", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          vendor_slug: vendorSlug,
-          version_tag: versionTag,
           prev_spec: JSON.parse(prevSpec),
           new_spec: JSON.parse(newSpec),
-          release_notes: releaseNotes,
         }),
       });
       const data = await res.json();
-      if (data.success) {
-        setPreviewDiff(data);
-      }
+      setDiffResult(data);
     } catch (err: any) {
       alert("Spec Comparison Error: " + err.message);
     } finally {
@@ -158,42 +144,42 @@ export default function ProducerView({
     <div className="space-y-8">
       {/* Top Telemetry & Adoption Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
+        <div className="p-6 rounded-2xl bg-white border border-[#E5DAC1] shadow-xs">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] mb-1 font-bold">
             Customer Adoption Rate
           </div>
-          <div className="font-sans text-3xl font-bold text-[#F3E5AB]">82.4%</div>
-          <p className="text-xs text-emerald-400 mt-1 font-mono">
+          <div className="font-sans text-3xl font-black text-[#0A0A0A]">82.4%</div>
+          <p className="text-xs text-emerald-700 mt-1 font-mono font-semibold">
             +38% faster than manual migrations
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
+        <div className="p-6 rounded-2xl bg-white border border-[#E5DAC1] shadow-xs">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] mb-1 font-bold">
             Subscribed Repositories
           </div>
-          <div className="font-sans text-3xl font-bold text-[#FAF9F6]">842 Repos</div>
-          <p className="text-xs text-[#D4AF37] mt-1 font-mono">
+          <div className="font-sans text-3xl font-black text-[#0A0A0A]">842 Repos</div>
+          <p className="text-xs text-[#8C6515] mt-1 font-mono font-semibold">
             Across 148 Organizations
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
+        <div className="p-6 rounded-2xl bg-white border border-[#E5DAC1] shadow-xs">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] mb-1 font-bold">
             Verified PRs Delivered
           </div>
-          <div className="font-sans text-3xl font-bold text-[#FAF9F6]">712 PRs</div>
-          <p className="text-xs text-emerald-400 mt-1 font-mono">
+          <div className="font-sans text-3xl font-black text-[#0A0A0A]">712 PRs</div>
+          <p className="text-xs text-emerald-700 mt-1 font-mono font-semibold">
             100% Sandbox Contract Passed
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/30 shadow-xl">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-[#A1A1AA] mb-1">
+        <div className="p-6 rounded-2xl bg-white border border-[#E5DAC1] shadow-xs">
+          <div className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] mb-1 font-bold">
             Dev Hours Saved
           </div>
-          <div className="font-sans text-3xl font-bold text-[#F3E5AB]">3,560 Hrs</div>
-          <p className="text-xs text-zinc-400 mt-1 font-mono">
+          <div className="font-sans text-3xl font-black text-[#0A0A0A]">3,560 Hrs</div>
+          <p className="text-xs text-[#71717A] mt-1 font-mono">
             Zero customer churn
           </p>
         </div>
@@ -201,9 +187,9 @@ export default function ProducerView({
 
       {/* Success Banner */}
       {publishResult && (
-        <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 font-mono text-xs text-emerald-300 space-y-2 animate-fade-in shadow-xl">
-          <div className="flex items-center gap-2 font-bold text-sm text-emerald-400">
-            <CheckCircle2 className="w-5 h-5" />
+        <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-300 font-mono text-xs text-emerald-800 space-y-2 animate-fade-in shadow-xs">
+          <div className="flex items-center gap-2 font-bold text-sm text-emerald-700">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
             <span>
               Release {publishResult.vendor_slug}@{publishResult.version_tag} Published & Dispatched!
             </span>
@@ -215,190 +201,136 @@ export default function ProducerView({
       )}
 
       {/* OpenAPI Spec Publisher Form */}
-      <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-[#D4AF37]/35 shadow-xl p-6 sm:p-8">
-        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+      <div className="rounded-2xl bg-white border border-[#E5DAC1] shadow-xs p-6 sm:p-8">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E5DAC1] mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center">
-              <UploadCloud className="w-5 h-5 text-[#F3E5AB]" />
+            <div className="w-9 h-9 rounded-xl bg-[#0A0A0A] border border-[#BA8C28]/40 flex items-center justify-center">
+              <UploadCloud className="w-4 h-4 text-[#BA8C28]" />
             </div>
             <div>
-              <h3 className="font-sans text-xl font-bold text-[#FAF9F6]">
-                Publish New API Spec Release
+              <h3 className="font-sans text-lg font-bold text-[#0A0A0A]">
+                Publish New OpenAPI Spec Release
               </h3>
-              <p className="text-xs text-[#A1A1AA]">
-                Oasdiff compares specs, Claude Sonnet generates the Migration Manifest, and Aurumend opens contract-verified PRs across all customer repos.
+              <p className="text-xs text-[#4B5563]">
+                Diffs specifications with OASDiff, synthesizes deterministic manifests, and auto-opens tested PRs
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={handleQuickCompare}
+            onClick={handleCompareSpecs}
             disabled={comparing}
-            className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#070709] border border-white/10 hover:border-[#D4AF37]/50 text-xs font-mono text-zinc-300 hover:text-white cursor-pointer transition-all"
+            className="px-4 py-2 rounded-lg bg-white hover:bg-[#FAF9F5] border border-[#DFD2B5] text-xs font-semibold text-[#0A0A0A] transition-all flex items-center gap-2 cursor-pointer shadow-xs"
           >
             {comparing ? (
-              <RotateCw className="w-3.5 h-3.5 animate-spin text-[#D4AF37]" />
+              <RotateCw className="w-3.5 h-3.5 animate-spin text-[#BA8C28]" />
             ) : (
-              <GitCompare className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <GitCompare className="w-3.5 h-3.5 text-[#BA8C28]" />
             )}
-            <span>{comparing ? "Comparing..." : "Preview Diff & Manifest"}</span>
+            <span>Preview OASDiff</span>
           </button>
         </div>
 
-        {/* Live Diff Preview Box */}
-        {previewDiff && (
-          <div className="mb-6 p-4 rounded-xl bg-black/70 border border-[#D4AF37]/40 font-mono text-xs space-y-2">
-            <div className="flex items-center justify-between text-xs font-bold text-[#F3E5AB]">
-              <span>Spec Comparison Preview</span>
-              <span className="text-emerald-400">
-                {previewDiff.diff.totalBreakingChanges} Breaking Change(s) Found
-              </span>
-            </div>
-            <p className="text-zinc-300 text-[11px]">{previewDiff.diff.summary}</p>
-            <div className="text-[10px] text-[#A1A1AA]">
-              Manifest Patterns: {previewDiff.manifest.ast_search_patterns.length} AST patterns synthesized by Claude Sonnet
-            </div>
-          </div>
-        )}
-
-        <form onSubmit={handlePublish} className="space-y-6 font-mono text-xs">
+        <form onSubmit={handlePublish} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[#A1A1AA] uppercase mb-1.5 text-[11px]">
-                Vendor Slug
+              <label className="block text-xs font-mono uppercase text-[#71717A] mb-1 font-bold">
+                Vendor Identifier (Slug)
               </label>
               <input
                 type="text"
                 value={vendorSlug}
                 onChange={(e) => setVendorSlug(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#FAF9F6]"
                 required
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] text-xs text-[#0A0A0A] font-mono focus:border-[#BA8C28] focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-[#A1A1AA] uppercase mb-1.5 text-[11px]">
+              <label className="block text-xs font-mono uppercase text-[#71717A] mb-1 font-bold">
                 Version Tag
               </label>
               <input
                 type="text"
                 value={versionTag}
                 onChange={(e) => setVersionTag(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#FAF9F6]"
                 required
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] text-xs text-[#0A0A0A] font-mono focus:border-[#BA8C28] focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[#A1A1AA] uppercase mb-1.5 text-[11px]">
-              Changelog & Release Notes (Markdown)
+            <label className="block text-xs font-mono uppercase text-[#71717A] mb-1 font-bold">
+              Release Notes & Breaking Changes Summary
             </label>
             <textarea
               rows={2}
               value={releaseNotes}
               onChange={(e) => setReleaseNotes(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[#FAF9F6]"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] text-xs text-[#0A0A0A] font-mono focus:border-[#BA8C28] focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Side by side OpenAPI specs */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <label className="block text-[#A1A1AA] uppercase mb-1.5 text-[11px] flex items-center justify-between">
-                <span>Previous OpenAPI Spec (v1)</span>
-                <span className="text-rose-400">Baseline</span>
+              <label className="block text-xs font-mono uppercase text-[#71717A] mb-1 font-bold">
+                Previous Version Spec (JSON)
               </label>
               <textarea
-                rows={8}
+                rows={10}
                 value={prevSpec}
                 onChange={(e) => setPrevSpec(e.target.value)}
-                className="w-full p-3 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[11px] text-zinc-300 font-mono"
-                required
+                className="w-full px-4 py-3 rounded-xl bg-[#0D0D11] border border-[#E5DAC1]/50 text-xs text-[#FAF9F5] font-mono focus:outline-none"
               />
             </div>
-
             <div>
-              <label className="block text-[#A1A1AA] uppercase mb-1.5 text-[11px] flex items-center justify-between">
-                <span>New OpenAPI Spec (v2)</span>
-                <span className="text-emerald-400">Target</span>
+              <label className="block text-xs font-mono uppercase text-[#71717A] mb-1 font-bold">
+                New Breaking Version Spec (JSON)
               </label>
               <textarea
-                rows={8}
+                rows={10}
                 value={newSpec}
                 onChange={(e) => setNewSpec(e.target.value)}
-                className="w-full p-3 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-[11px] text-zinc-300 font-mono"
-                required
+                className="w-full px-4 py-3 rounded-xl bg-[#0D0D11] border border-[#E5DAC1]/50 text-xs text-[#FAF9F5] font-mono focus:outline-none"
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={publishing}
-            className="w-full py-3.5 px-6 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515] text-[#070709] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xl"
-          >
-            {publishing ? (
-              <>
-                <RotateCw className="w-4 h-4 animate-spin" />
-                <span>Diffing Spec & Synthesizing Migration Manifest...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                <span>Publish Release & Auto-Dispatch PRs to Customers</span>
-              </>
-            )}
-          </button>
-        </form>
-      </div>
-
-      {/* Published Releases History */}
-      <div className="rounded-2xl bg-[#111116]/85 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
-        <div className="p-5 border-b border-white/10 flex items-center justify-between">
-          <div>
-            <h3 className="font-sans text-base font-bold text-[#FAF9F6]">
-              Published Vendor API Releases
-            </h3>
-            <p className="text-xs text-[#A1A1AA]">
-              Releases with generated migration manifests and sandbox fixtures
-            </p>
-          </div>
-          <span className="text-xs font-mono text-[#D4AF37]">
-            {vendorReleases.length || 1} Published
-          </span>
-        </div>
-
-        <div className="divide-y divide-white/5 font-mono text-xs">
-          {vendorReleases.length === 0 ? (
-            <div className="p-4 flex items-center justify-between">
-              <div>
-                <span className="text-[#FAF9F6] font-bold">stripe @ v2025-04-01</span>
-                <div className="text-[11px] text-zinc-400 mt-0.5">
-                  charges.create deprecated → paymentIntents.create
-                </div>
+          {/* Diff Result Box */}
+          {diffResult && (
+            <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] font-mono text-xs space-y-2">
+              <div className="text-xs font-bold text-[#0A0A0A] flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[#BA8C28]" />
+                <span>OASDiff Identified {diffResult.breaking_count} Breaking Alterations</span>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
-                ACTIVE DEPLOYMENT
-              </span>
+              <div className="text-[11px] text-[#4B5563]">
+                {diffResult.diff_summary}
+              </div>
             </div>
-          ) : (
-            vendorReleases.map((rel) => (
-              <div key={rel.id} className="p-4 flex items-center justify-between hover:bg-[#161622]/50 transition-colors">
-                <div>
-                  <span className="text-[#FAF9F6] font-bold">
-                    {rel.vendorSlug} @ {rel.versionTag}
-                  </span>
-                  <div className="text-[11px] text-zinc-400 mt-0.5">
-                    {rel.breakingChangeSummary || "Active Migration Manifest"}
-                  </div>
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
-                  ACTIVE DEPLOYMENT
-                </span>
-              </div>
-            ))
           )}
-        </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={publishing}
+              className="px-6 py-3 rounded-xl bg-[#0A0A0A] hover:bg-[#1C1C22] text-[#FAF9F5] text-xs font-bold tracking-wide transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+            >
+              {publishing ? (
+                <>
+                  <RotateCw className="w-4 h-4 animate-spin text-[#BA8C28]" />
+                  <span>Synthesizing Manifest & Dispatched PRs...</span>
+                </>
+              ) : (
+                <>
+                  <span>Publish Release & Auto-Dispatch PRs</span>
+                  <span className="text-[#BA8C28]">→</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

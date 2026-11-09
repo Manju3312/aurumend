@@ -7,13 +7,7 @@ import {
   CheckCircle2,
   Sparkles,
   Shield,
-  ExternalLink,
   RotateCw,
-  Layers,
-  ArrowRight,
-  Server,
-  Lock,
-  GitPullRequest,
   Check,
 } from "lucide-react";
 
@@ -35,7 +29,6 @@ export default function GitHubConnectionModal({
   const [customOrgName, setCustomOrgName] = useState("");
   const [connecting, setConnecting] = useState(false);
   const [connectionSuccess, setConnectionSuccess] = useState<string | null>(null);
-  const [customSlug, setCustomSlug] = useState("aurumend-bot");
 
   if (!isOpen) return null;
 
@@ -45,7 +38,6 @@ export default function GitHubConnectionModal({
     const orgToLink = customOrgName.trim() || selectedPresetOrg;
 
     try {
-      // Direct call to simulate GitHub installation handshake without external redirect
       const simulatedId = Math.floor(10000000 + Math.random() * 90000000).toString();
       const res = await fetch(`/api/github/callback?installation_id=${simulatedId}&account=${encodeURIComponent(orgToLink)}&setup_action=install`);
       
@@ -58,7 +50,6 @@ export default function GitHubConnectionModal({
       }
     } catch (err: any) {
       console.error("Instant connect failed", err);
-      // Fallback: update UI state
       setConnectionSuccess(`Linked '${orgToLink}' (Sandbox Simulation Active).`);
       onRefreshData();
     } finally {
@@ -67,68 +58,68 @@ export default function GitHubConnectionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-2xl rounded-2xl bg-[#0e0e13] border border-white/[0.08] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-2xl rounded-2xl bg-white border border-[#E5DAC1] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Top Header */}
-        <div className="p-6 border-b border-white/[0.06] flex items-center justify-between bg-[#0a0a0f]">
+        <div className="p-6 border-b border-[#E5DAC1] flex items-center justify-between bg-[#FAF9F5]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-[#0A0A0A] border border-[#BA8C28]/40 flex items-center justify-center shadow-xs">
               <Github className="w-4 h-4 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-sans text-base font-bold tracking-tight text-[#FAF9F6]">
+                <h3 className="font-sans text-base font-bold tracking-tight text-[#0A0A0A]">
                   Connect GitHub Organization
                 </h3>
-                <span className="text-[9px] font-mono uppercase px-2 py-0.2 rounded bg-emerald-950/70 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[9px] font-mono uppercase px-2 py-0.2 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 font-semibold">
                   JIT Auth
                 </span>
               </div>
-              <p className="text-xs text-[#A1A1AA] font-sans">
+              <p className="text-xs text-[#4B5563] font-sans">
                 Grant repository access for AST call-site indexing and automated pull requests
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#71717A] hover:text-[#0A0A0A] hover:bg-[#F5F3EC] transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-white/[0.06] bg-[#09090d] px-6 pt-2 font-sans">
+        <div className="flex border-b border-[#E5DAC1] bg-[#FAF9F5] px-6 pt-2 font-sans">
           <button
             onClick={() => setActiveTab("instant")}
-            className={`pb-3 px-4 text-xs font-medium tracking-tight transition-all border-b-2 cursor-pointer ${
+            className={`pb-3 px-4 text-xs font-semibold tracking-tight transition-all border-b-2 cursor-pointer ${
               activeTab === "instant"
-                ? "border-amber-400 text-white font-semibold"
-                : "border-transparent text-[#A1A1AA] hover:text-white"
+                ? "border-[#BA8C28] text-[#0A0A0A]"
+                : "border-transparent text-[#71717A] hover:text-[#0A0A0A]"
             }`}
           >
             Quick Connect (Demo Mode)
           </button>
           <button
             onClick={() => setActiveTab("production")}
-            className={`pb-3 px-4 text-xs font-medium tracking-tight transition-all border-b-2 cursor-pointer ${
+            className={`pb-3 px-4 text-xs font-semibold tracking-tight transition-all border-b-2 cursor-pointer ${
               activeTab === "production"
-                ? "border-amber-400 text-white font-semibold"
-                : "border-transparent text-[#A1A1AA] hover:text-white"
+                ? "border-[#BA8C28] text-[#0A0A0A]"
+                : "border-transparent text-[#71717A] hover:text-[#0A0A0A]"
             }`}
           >
             Production GitHub App
           </button>
           <button
             onClick={() => setActiveTab("linked")}
-            className={`pb-3 px-4 text-xs font-medium tracking-tight transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
+            className={`pb-3 px-4 text-xs font-semibold tracking-tight transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
               activeTab === "linked"
-                ? "border-amber-400 text-white font-semibold"
-                : "border-transparent text-[#A1A1AA] hover:text-white"
+                ? "border-[#BA8C28] text-[#0A0A0A]"
+                : "border-transparent text-[#71717A] hover:text-[#0A0A0A]"
             }`}
           >
             <span>Linked Accounts</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/[0.08] text-white">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-[#F5F3EC] border border-[#E5DAC1] text-[#0A0A0A]">
               {installations.length}
             </span>
           </button>
@@ -137,26 +128,26 @@ export default function GitHubConnectionModal({
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-6">
           {connectionSuccess && (
-            <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/50 text-xs font-mono text-emerald-300 flex items-center gap-3 animate-fade-in">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-xs font-mono text-emerald-800 flex items-center gap-3">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>{connectionSuccess}</span>
             </div>
           )}
 
           {activeTab === "instant" && (
             <div className="space-y-5">
-              <div className="p-4 rounded-xl bg-[#070709] border border-[#D4AF37]/20">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#F3E5AB] mb-1">
-                  <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Instant 1-Click Sovereign Connection</span>
+              <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#8C6515] mb-1">
+                  <Sparkles className="w-3.5 h-3.5 text-[#BA8C28]" />
+                  <span>Instant 1-Click Sandbox Connection</span>
                 </div>
-                <p className="text-xs text-[#A1A1AA] leading-relaxed">
-                  No GitHub admin privileges required. Instantly provisions a sovereign repository link with pre-indexed AST call-sites, simulated Webhook dispatchers, and Stoplight Prism verification fixtures.
+                <p className="text-xs text-[#4B5563] leading-relaxed">
+                  No GitHub admin privileges required. Instantly provisions a repository link with pre-indexed AST call-sites, simulated Webhook dispatchers, and Stoplight Prism verification fixtures.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-[#A1A1AA] mb-2">
+                <label className="block text-xs font-mono uppercase text-[#71717A] mb-2 font-bold">
                   Select Target Organization / Repository Demo
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -185,17 +176,17 @@ export default function GitHubConnectionModal({
                       }}
                       className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                         selectedPresetOrg === preset.id && !customOrgName
-                          ? "bg-[#D4AF37]/15 border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                          : "bg-[#161622] border-white/10 hover:border-white/20"
+                          ? "bg-[#F7EECD] border-[#BA8C28] shadow-xs"
+                          : "bg-white border-[#E5DAC1] hover:border-[#BA8C28]/60"
                       }`}
                     >
-                      <div className="font-bold text-xs text-[#FAF9F6] flex items-center justify-between mb-1">
+                      <div className="font-bold text-xs text-[#0A0A0A] flex items-center justify-between mb-1">
                         <span>{preset.name}</span>
                         {selectedPresetOrg === preset.id && !customOrgName && (
-                          <Check className="w-3.5 h-3.5 text-[#D4AF37]" />
+                          <Check className="w-3.5 h-3.5 text-[#BA8C28]" />
                         )}
                       </div>
-                      <div className="text-[10px] text-[#A1A1AA] leading-tight">
+                      <div className="text-[10px] text-[#4B5563] leading-tight">
                         {preset.desc}
                       </div>
                     </button>
@@ -204,7 +195,7 @@ export default function GitHubConnectionModal({
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-[#A1A1AA] mb-1.5">
+                <label className="block text-xs font-mono uppercase text-[#71717A] mb-1.5 font-bold">
                   Or Specify Custom Organization Name
                 </label>
                 <input
@@ -212,49 +203,39 @@ export default function GitHubConnectionModal({
                   placeholder="e.g. my-company-engineering"
                   value={customOrgName}
                   onChange={(e) => setCustomOrgName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 text-xs text-[#FAF9F6] focus:border-[#D4AF37] focus:outline-none font-mono"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#E5DAC1] text-xs text-[#0A0A0A] focus:border-[#BA8C28] focus:outline-none font-mono"
                 />
               </div>
 
               {/* Granted Permissions Summary */}
-              <div className="p-4 rounded-xl bg-[#161622] border border-white/5 space-y-2">
-                <div className="text-[11px] font-mono uppercase text-zinc-400">
-                  Autonomous Permissions Granted via JIT Token:
+              <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] space-y-2">
+                <div className="text-xs font-mono uppercase text-[#71717A] font-bold flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Configured Permissions</span>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-xs font-mono text-[#A1A1AA]">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Pull Requests: Read & Write</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Repository Contents: Read & Write</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Checks & Statuses: Read & Write</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>1-Hour JIT Token Auto-Rotation</span>
-                  </div>
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-[#0A0A0A]">
+                  <div>✓ Repository Contents (Read)</div>
+                  <div>✓ Pull Requests (Read & Write)</div>
+                  <div>✓ Webhook Deliveries (Read)</div>
+                  <div>✓ 1-Hour Ephemeral Tokens</div>
                 </div>
               </div>
 
+              {/* Submit CTA */}
               <button
                 onClick={handleInstantConnect}
                 disabled={connecting}
-                className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515] text-[#070709] hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer"
+                className="w-full py-3 rounded-xl bg-[#0A0A0A] hover:bg-[#1C1C22] text-[#FAF9F5] text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 {connecting ? (
                   <>
-                    <RotateCw className="w-4 h-4 animate-spin" />
-                    <span>Authorizing Sovereign JIT Token...</span>
+                    <RotateCw className="w-4 h-4 animate-spin text-[#BA8C28]" />
+                    <span>Connecting Organization...</span>
                   </>
                 ) : (
                   <>
-                    <Shield className="w-4 h-4" />
-                    <span>Authorize & Link Repository</span>
+                    <span>Connect & Start Monitoring</span>
+                    <span className="text-[#BA8C28]">→</span>
                   </>
                 )}
               </button>
@@ -262,117 +243,53 @@ export default function GitHubConnectionModal({
           )}
 
           {activeTab === "production" && (
-            <div className="space-y-5 text-xs text-[#A1A1AA]">
-              <div className="p-4 rounded-xl bg-[#070709] border border-[#D4AF37]/20 space-y-2">
-                <div className="font-bold text-[#F3E5AB] text-xs">
-                  Production GitHub App Configuration
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] text-xs leading-relaxed text-[#4B5563]">
+                To connect your real production GitHub organization, configure your GitHub App credentials in <code className="bg-[#F5F3EC] px-1.5 py-0.5 rounded text-[#0A0A0A]">.env</code>:
+                <div className="mt-3 p-3 rounded-lg bg-[#0D0D11] text-emerald-400 font-mono text-[11px]">
+                  GITHUB_APP_ID=...<br />
+                  GITHUB_APP_PRIVATE_KEY=&quot;-----BEGIN RSA PRIVATE KEY-----...&quot;<br />
+                  GITHUB_APP_SLUG=aurumend-bot
                 </div>
-                <p>
-                  To link a real enterprise GitHub App on github.com, provide your GitHub App Slug below and click redirect.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-[11px] font-mono uppercase text-[#A1A1AA] mb-1.5">
-                    GitHub App Slug
-                  </label>
-                  <input
-                    type="text"
-                    value={customSlug}
-                    onChange={(e) => setCustomSlug(e.target.value)}
-                    placeholder="e.g. your-org-aurumend"
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 text-xs text-[#FAF9F6] focus:border-[#D4AF37] focus:outline-none font-mono"
-                  />
-                  <p className="text-[10px] text-zinc-500 mt-1">
-                    Will redirect to https://github.com/apps/{customSlug}/installations/new
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#161622] border border-white/5 space-y-2">
-                  <div className="font-bold text-[#FAF9F6] text-xs">
-                    Required GitHub App Permissions:
-                  </div>
-                  <ul className="list-disc pl-5 space-y-1 text-zinc-400">
-                    <li>Repository contents: Read and write (for committing refactored code branches)</li>
-                    <li>Pull requests: Read and write (for opening self-healing contract-verified PRs)</li>
-                    <li>Checks: Read and write (for recording Stoplight Prism sandbox verification status)</li>
-                    <li>Subscribe to events: Push, Pull request, Workflow run</li>
-                  </ul>
-                </div>
-
-                <a
-                  href={`/api/github/install?live=true&app_slug=${encodeURIComponent(customSlug)}`}
-                  className="w-full py-3 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#161622] hover:bg-[#1e1e2d] text-[#FAF9F6] border border-[#D4AF37]/40 hover:border-[#D4AF37] transition-all flex items-center justify-center gap-2 block text-center"
-                >
-                  <ExternalLink className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Redirect to GitHub.com for Installation</span>
-                </a>
               </div>
             </div>
           )}
 
           {activeTab === "linked" && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {installations.length === 0 ? (
-                <div className="p-8 text-center rounded-xl bg-[#070709] border border-white/5">
-                  <Github className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
-                  <p className="text-xs text-[#A1A1AA]">No GitHub installations linked yet.</p>
-                  <button
-                    onClick={() => setActiveTab("instant")}
-                    className="mt-3 px-4 py-1.5 rounded-lg text-xs font-semibold text-[#070709] bg-[#D4AF37] hover:brightness-110 cursor-pointer"
-                  >
-                    Link First Repository
-                  </button>
+                <div className="text-center py-8 text-xs text-[#71717A] font-mono">
+                  No GitHub installations connected yet. Click &quot;Quick Connect&quot; to link a demo repo.
                 </div>
               ) : (
-                <div className="space-y-2.5">
-                  {installations.map((inst, idx) => (
-                    <div
-                      key={inst.id || idx}
-                      className="p-4 rounded-xl bg-[#070709] border border-white/10 flex items-center justify-between hover:border-[#D4AF37]/40 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                        </div>
-                        <div>
-                          <div className="font-bold text-xs text-[#FAF9F6] font-mono">
-                            {inst.accountLogin || "acme-corp"}
-                          </div>
-                          <div className="text-[10px] text-[#A1A1AA] font-mono flex items-center gap-2">
-                            <span>Installation ID: #{inst.githubInstallationId}</span>
-                            <span>•</span>
-                            <span className="text-emerald-400">JIT Token Active</span>
-                          </div>
-                        </div>
+                installations.map((inst: any, idx: number) => (
+                  <div
+                    key={inst.id || idx}
+                    className="p-3.5 rounded-xl bg-white border border-[#E5DAC1] flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E5DAC1] flex items-center justify-center">
+                        <Github className="w-4 h-4 text-[#0A0A0A]" />
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#D4AF37]/15 text-[#F3E5AB] border border-[#D4AF37]/30">
-                          Status: Active
-                        </span>
+                      <div>
+                        <div className="text-xs font-bold text-[#0A0A0A]">
+                          {inst.accountLogin}
+                        </div>
+                        <div className="text-[10px] font-mono text-[#71717A]">
+                          Installation #{inst.githubInstallationId} • Active
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-semibold">
+                      Connected
+                    </span>
+                  </div>
+                ))
               )}
             </div>
           )}
-        </div>
-
-        {/* Modal Footer */}
-        <div className="p-4 border-t border-white/10 bg-[#0b0b0e] flex items-center justify-between text-[11px] font-mono text-zinc-500 px-6">
-          <span>RSA-4096 JIT Ephemeral Authorization</span>
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white cursor-pointer"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
   );
 }
-

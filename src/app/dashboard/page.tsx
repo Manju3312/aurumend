@@ -59,7 +59,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070709] text-[#FAF9F6] selection:bg-[#D4AF37]/30 selection:text-[#F3E5AB] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#0A0A0A] selection:bg-[#BA8C28]/25 selection:text-[#0A0A0A] flex flex-col justify-between">
       <div>
         {/* Header with Role Mode Toggle */}
         <DashboardHeader

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import RoyalAstCanvas from "@/components/canvas/RoyalAstCanvas";
 import Navbar from "@/components/landing/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
 import SplitScreenInteractiveDemo from "@/components/landing/SplitScreenInteractiveDemo";
@@ -22,20 +21,11 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#070709] text-[#FAF9F6] selection:bg-[#D4AF37]/30 selection:text-[#F3E5AB] overflow-x-hidden">
-      {/* 3D Royal Kintsugi Canvas Background */}
-      <RoyalAstCanvas isSimulating={isSimulating} />
-
-      {/* Radial overlay to ensure crisp readability */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 bg-radial from-transparent via-[#070709]/60 to-[#070709]"
-        style={{ mixBlendMode: "multiply" }}
-      />
-
-      {/* Navigation */}
+    <main className="relative min-h-screen bg-[#FAF9F5] text-[#0A0A0A] selection:bg-[#BA8C28]/25 selection:text-[#0A0A0A] overflow-x-hidden">
+      {/* Navigation matching reference design */}
       <Navbar onOpenGitHubModal={() => setGithubModalOpen(true)} />
 
-      {/* Hero Section */}
+      {/* Hero Section with 2-Column Split + 3D Helix from reference design */}
       <HeroSection
         isSimulating={isSimulating}
         onSimulateToggle={handleSimulateToggle}

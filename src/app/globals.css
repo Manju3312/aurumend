@@ -1,31 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --font-cinzel: 'Cinzel', Georgia, serif;
   --font-jakarta: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-jetbrains: 'JetBrains Mono', monospace;
-  --bg-obsidian: #070709;
-  --bg-charcoal: #111116;
-  --bg-charcoal-elevated: #16161f;
-  --gold-royal: #D4AF37;
-  --gold-champagne: #F3E5AB;
-  --gold-amber: #996515;
-  --gold-amber-border: rgba(212, 175, 55, 0.22);
-  --ivory-white: #FAF9F6;
-  --muted-silver: #A1A1AA;
+  
+  /* Palette directly from reference design */
+  --bg-canvas: #FAF9F5;
+  --bg-canvas-subtle: #F5F3EC;
+  --bg-card: #FFFFFF;
+  --bg-card-elevated: #FCFBF9;
+  
+  --text-primary: #0A0A0A;
+  --text-secondary: #4B5563;
+  --text-muted: #71717A;
+  
+  --gold-primary: #BA8C28;
+  --gold-accent: #C49A2C;
+  --gold-light: #F7EECD;
+  --gold-border: #E5DAC1;
+  --gold-border-subtle: rgba(186, 140, 40, 0.22);
+  
+  --black-obsidian: #0A0A0A;
+  --black-charcoal: #141418;
+  
+  --status-green: #10B981;
 }
 
 @theme {
-  --color-obsidian: var(--bg-obsidian);
-  --color-charcoal: var(--bg-charcoal);
-  --color-charcoal-elevated: var(--bg-charcoal-elevated);
-  --color-gold-royal: var(--gold-royal);
-  --color-gold-champagne: var(--gold-champagne);
-  --color-gold-amber: var(--gold-amber);
-  --color-ivory: var(--ivory-white);
-  --color-silver: var(--muted-silver);
+  --color-canvas: var(--bg-canvas);
+  --color-canvas-subtle: var(--bg-canvas-subtle);
+  --color-card: var(--bg-card);
+  --color-card-elevated: var(--bg-card-elevated);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  
+  --color-gold-royal: var(--gold-primary);
+  --color-gold-accent: var(--gold-accent);
+  --color-gold-light: var(--gold-light);
+  --color-gold-border: var(--gold-border);
+  
+  --color-obsidian: var(--black-obsidian);
+  --color-charcoal: var(--black-charcoal);
 
-  --font-serif: var(--font-cinzel), 'Cinzel', serif;
   --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: var(--font-jetbrains), 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -36,52 +54,50 @@
 
 html,
 body {
-  background-color: var(--bg-obsidian);
-  color: var(--ivory-white);
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: hidden;
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  selection-background-color: #d4af3733;
-  selection-color: #f3e5ab;
+  selection-background-color: #ba8c2833;
+  selection-color: #0a0a0a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Developer Platform Hairline Borders & Glass */
+/* Developer Platform Luxury Cards (Light Canvas) */
 .dev-card {
-  background: rgba(17, 17, 22, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #FFFFFF;
+  border: 1px solid var(--gold-border);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dev-card:hover {
-  border-color: rgba(212, 175, 55, 0.35);
-  background: rgba(22, 22, 30, 0.85);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.1);
+  border-color: var(--gold-primary);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.06), 0 0 15px rgba(186, 140, 40, 0.08);
 }
 
 .dev-border-gold {
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1px solid var(--gold-border);
 }
 
 .dev-border-subtle {
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(0, 0, 0, 0.07);
 }
 
-/* Unified diff highlighting */
+/* Unified diff highlighting (high-contrast devtools style) */
 .diff-line-add {
   background: rgba(16, 185, 129, 0.12);
-  color: #34d399;
+  color: #059669;
   border-left: 2px solid #10b981;
 }
 
 .diff-line-del {
   background: rgba(244, 63, 94, 0.12);
-  color: #fb7185;
+  color: #e11d48;
   border-left: 2px solid #f43f5e;
 }
 
@@ -92,36 +108,36 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #070709;
+  background: #FAF9F5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.25);
+  background: rgba(186, 140, 40, 0.3);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.5);
+  background: rgba(186, 140, 40, 0.6);
 }
 
-/* Kintsugi & Gold Utilities */
+/* Warm Gold Utilities */
 .gold-glow {
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.2), 0 0 50px rgba(212, 175, 55, 0.08);
+  box-shadow: 0 0 25px rgba(186, 140, 40, 0.2), 0 0 50px rgba(186, 140, 40, 0.08);
 }
 
 .gold-glow-lg {
-  box-shadow: 0 0 35px rgba(212, 175, 55, 0.35), 0 0 70px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 0 35px rgba(186, 140, 40, 0.35), 0 0 70px rgba(186, 140, 40, 0.15);
 }
 
 .gold-text-gradient {
-  background: linear-gradient(135deg, #FAF9F6 0%, #F3E5AB 45%, #D4AF37 80%, #996515 100%);
+  background: linear-gradient(135deg, #0A0A0A 0%, #BA8C28 60%, #996515 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gold-gradient-border {
   position: relative;
-  background: #111116;
+  background: #FFFFFF;
   border-radius: 12px;
 }
 
@@ -131,7 +147,7 @@ body {
   inset: -1px;
   border-radius: 13px;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(243, 229, 171, 0.4) 0%, rgba(212, 175, 55, 0.2) 50%, rgba(153, 101, 21, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(243, 229, 171, 0.6) 0%, rgba(186, 140, 40, 0.4) 50%, rgba(153, 101, 21, 0.2) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -139,10 +155,10 @@ body {
 }
 
 .glass-card {
-  background: rgba(17, 17, 22, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--gold-border);
 }
 
 .glass-card-hover {
@@ -150,25 +166,8 @@ body {
 }
 
 .glass-card-hover:hover {
-  background: rgba(22, 22, 31, 0.85);
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.15);
+  background: #FFFFFF;
+  border-color: var(--gold-primary);
+  box-shadow: 0 10px 30px -10px rgba(186, 140, 40, 0.15);
   transform: translateY(-2px);
 }
-
-/* Pulse animation for neural veins */
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.3;
-    filter: drop-shadow(0 0 4px #D4AF37);
-  }
-  50% {
-    opacity: 0.9;
-    filter: drop-shadow(0 0 12px #F3E5AB);
-  }
-}
-
-.pulse-gold {
-  animation: pulseGlow 3s infinite ease-in-out;
-}
-

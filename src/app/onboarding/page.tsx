@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import RoyalAstCanvas from "@/components/canvas/RoyalAstCanvas";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Shield, UploadCloud, Layers, ArrowRight, Check, Sparkles } from "lucide-react";
+import { Shield, UploadCloud, Layers, ArrowRight, Check, ShieldCheck } from "lucide-react";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -38,19 +37,19 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-6 bg-[#070709] overflow-hidden">
-      <RoyalAstCanvas isSimulating={saving} />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-radial from-transparent via-[#070709]/70 to-[#070709]" />
+    <div className="relative min-h-screen flex items-center justify-center p-6 bg-[#FAF9F5] overflow-hidden">
+      {/* Soft warm radial glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-[#F7EECD]/70 via-[#E8DEC8]/40 to-transparent rounded-full blur-[130px] pointer-events-none -z-10" />
 
-      <div className="relative z-10 w-full max-w-xl rounded-2xl dev-card p-8 sm:p-10 shadow-2xl">
+      <div className="relative z-10 w-full max-w-xl rounded-2xl bg-white border border-[#E5DAC1] p-8 sm:p-10 shadow-xs">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono mb-3 text-zinc-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E5DAC1] text-xs font-mono mb-3 text-[#8C6515] font-bold">
             <span>Setup Organization</span>
           </div>
-          <h1 className="font-sans text-3xl font-bold tracking-tight text-[#FAF9F6]">
+          <h1 className="font-sans text-3xl font-black tracking-tight text-[#0A0A0A]">
             Configure your workspace
           </h1>
-          <p className="text-xs text-[#A1A1AA] mt-1 font-sans">
+          <p className="text-xs text-[#4B5563] mt-1 font-sans">
             Select your operating mode to personalize your Aurumend dashboard
           </p>
         </div>
@@ -58,7 +57,7 @@ export default function OnboardingPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-mono uppercase text-[#A1A1AA] mb-1.5">
+              <label className="block text-[11px] font-mono uppercase text-[#71717A] mb-1.5 font-bold">
                 Organization Name
               </label>
               <input
@@ -68,94 +67,87 @@ export default function OnboardingPage() {
                   setName(e.target.value);
                   setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "-"));
                 }}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-xs text-[#FAF9F6] font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] focus:border-[#BA8C28] focus:outline-none text-xs text-[#0A0A0A] font-mono"
                 required
               />
             </div>
             <div>
-              <label className="block text-[11px] font-mono uppercase text-[#A1A1AA] mb-1.5">
-                Sovereign Slug
+              <label className="block text-[11px] font-mono uppercase text-[#71717A] mb-1.5 font-bold">
+                Organization Slug
               </label>
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#070709] border border-white/10 focus:border-[#D4AF37] focus:outline-none text-xs text-[#FAF9F6] font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] focus:border-[#BA8C28] focus:outline-none text-xs text-[#0A0A0A] font-mono"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono uppercase text-[#A1A1AA] mb-3">
-              Select Protocol Role Mode
+            <label className="block text-[11px] font-mono uppercase text-[#71717A] mb-3 font-bold">
+              Operating Mode
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* Consumer Mode */}
-              <button
-                type="button"
-                onClick={() => setRoleMode("consumer")}
-                className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-                  roleMode === "consumer"
-                    ? "bg-[#D4AF37]/15 border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                    : "bg-[#070709] border-white/10 hover:border-white/30"
-                }`}
-              >
-                <Shield className="w-5 h-5 text-emerald-400 mb-2" />
-                <div className="text-xs font-bold text-[#FAF9F6]">Consumer</div>
-                <div className="text-[10px] text-[#A1A1AA] mt-1 leading-snug">
-                  Protect repositories from upstream vendor deprecations.
-                </div>
-              </button>
-
-              {/* Producer Mode */}
-              <button
-                type="button"
-                onClick={() => setRoleMode("producer")}
-                className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-                  roleMode === "producer"
-                    ? "bg-[#D4AF37]/15 border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                    : "bg-[#070709] border-white/10 hover:border-white/30"
-                }`}
-              >
-                <UploadCloud className="w-5 h-5 text-[#F3E5AB] mb-2" />
-                <div className="text-xs font-bold text-[#FAF9F6]">API Producer</div>
-                <div className="text-[10px] text-[#A1A1AA] mt-1 leading-snug">
-                  Publish OpenAPI specs & auto-open verified PRs for consumers.
-                </div>
-              </button>
-
-              {/* Hybrid Mode */}
-              <button
-                type="button"
-                onClick={() => setRoleMode("hybrid")}
-                className={`p-4 rounded-xl text-left border transition-all cursor-pointer ${
-                  roleMode === "hybrid"
-                    ? "bg-[#D4AF37]/15 border-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                    : "bg-[#070709] border-white/10 hover:border-white/30"
-                }`}
-              >
-                <Layers className="w-5 h-5 text-[#D4AF37] mb-2" />
-                <div className="text-xs font-bold text-[#FAF9F6]">Hybrid Network</div>
-                <div className="text-[10px] text-[#A1A1AA] mt-1 leading-snug">
-                  Both consume external APIs and publish public APIs.
-                </div>
-              </button>
+              {[
+                {
+                  id: "consumer",
+                  title: "Consumer",
+                  desc: "I consume third-party APIs (Stripe, OpenAI). Automate incoming breaking changes.",
+                  icon: Shield,
+                },
+                {
+                  id: "producer",
+                  title: "API Producer",
+                  desc: "I publish an API. Generate migration manifests and tested PRs for my customers.",
+                  icon: UploadCloud,
+                },
+                {
+                  id: "hybrid",
+                  title: "Hybrid",
+                  desc: "Dual-mode: monitor incoming dependencies & distribute outgoing breaking revisions.",
+                  icon: Layers,
+                },
+              ].map((m) => {
+                const Icon = m.icon;
+                const isSelected = roleMode === m.id;
+                return (
+                  <div
+                    key={m.id}
+                    onClick={() => setRoleMode(m.id as any)}
+                    className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
+                      isSelected
+                        ? "bg-[#F7EECD] border-[#BA8C28] shadow-xs"
+                        : "bg-[#FAF9F5] border-[#E5DAC1] hover:border-[#BA8C28]/60"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <Icon className={`w-4 h-4 ${isSelected ? "text-[#BA8C28]" : "text-[#71717A]"}`} />
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#BA8C28]" />}
+                    </div>
+                    <div className="font-bold text-xs text-[#0A0A0A] mb-1">
+                      {m.title}
+                    </div>
+                    <div className="text-[10px] text-[#4B5563] leading-relaxed">
+                      {m.desc}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className="w-full py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#996515] text-[#070709] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 px-4 rounded-xl text-xs font-bold tracking-wide bg-[#0A0A0A] hover:bg-[#1C1C22] text-[#FAF9F5] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
-            <Sparkles className="w-4 h-4" />
-            <span>{saving ? "Provisioning Organization..." : "Launch Protocol Dashboard"}</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{saving ? "Configuring Workspace..." : "Initialize Workspace & Launch Dashboard"}</span>
+            <ArrowRight className="w-4 h-4 text-[#BA8C28]" />
           </button>
         </form>
       </div>
     </div>
   );
 }
-

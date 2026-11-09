@@ -60,42 +60,42 @@ export default function ApiKeyModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-xl rounded-2xl bg-[#111116] border border-[#D4AF37]/40 shadow-2xl p-6 overflow-hidden">
-        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-xl rounded-2xl bg-white border border-[#E5DAC1] shadow-2xl p-6 overflow-hidden">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E5DAC1] mb-6">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/15 border border-[#D4AF37]/30 flex items-center justify-center">
-              <KeyRound className="w-4 h-4 text-[#F3E5AB]" />
+            <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E5DAC1] flex items-center justify-center">
+              <KeyRound className="w-4 h-4 text-[#BA8C28]" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#FAF9F6]">API Keys (CLI & CI/CD)</h3>
-              <p className="text-[11px] text-[#A1A1AA]">
-                Hashed with SHA-256. Use with <code className="text-[#D4AF37]">Authorization: Bearer aur_live_...</code>
+              <h3 className="text-sm font-bold text-[#0A0A0A]">API Keys (CLI & CI/CD)</h3>
+              <p className="text-[11px] text-[#4B5563]">
+                Hashed with SHA-256. Use with <code className="text-[#BA8C28] font-bold">Authorization: Bearer aur_live_...</code>
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded text-zinc-400 hover:text-white">
+          <button onClick={onClose} className="p-1 rounded text-[#71717A] hover:text-[#0A0A0A] cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Newly generated raw key banner */}
         {newRawKey && (
-          <div className="mb-6 p-4 rounded-xl bg-amber-950/30 border border-[#D4AF37]/50">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#F3E5AB] mb-1.5">
-              <AlertCircle className="w-4 h-4 text-[#D4AF37]" />
+          <div className="mb-6 p-4 rounded-xl bg-[#F7EECD] border border-[#BA8C28]">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#8C6515] mb-1.5">
+              <AlertCircle className="w-4 h-4 text-[#BA8C28]" />
               <span>Copy your new API key now!</span>
             </div>
-            <p className="text-[11px] text-[#A1A1AA] mb-3">
+            <p className="text-[11px] text-[#4B5563] mb-3">
               This token will never be displayed again.
             </p>
-            <div className="flex items-center gap-2 p-2 rounded-lg bg-black/70 border border-white/10 font-mono text-xs text-[#FAF9F6]">
-              <span className="truncate flex-1">{newRawKey}</span>
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-[#E5DAC1] font-mono text-xs text-[#0A0A0A]">
+              <span className="truncate flex-1 font-bold">{newRawKey}</span>
               <button
                 onClick={copyKey}
-                className="px-3 py-1 rounded bg-[#D4AF37] text-black font-bold text-xs flex items-center gap-1 shrink-0"
+                className="px-3 py-1 rounded bg-[#0A0A0A] text-[#FAF9F5] font-bold text-xs flex items-center gap-1 shrink-0 cursor-pointer"
               >
-                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5 text-[#BA8C28]" />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
             </div>
@@ -109,38 +109,38 @@ export default function ApiKeyModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. GitHub Actions CI / Release Publisher"
-            className="flex-1 px-3.5 py-2 rounded-xl bg-[#070709] border border-white/10 text-xs text-[#FAF9F6] font-mono focus:border-[#D4AF37] focus:outline-none"
+            className="flex-1 px-3.5 py-2 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] text-xs text-[#0A0A0A] font-mono focus:border-[#BA8C28] focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#D4AF37] to-[#996515] text-[#070709] hover:brightness-110 flex items-center gap-1.5 shrink-0"
+            className="px-4 py-2 rounded-xl text-xs font-bold tracking-wide bg-[#0A0A0A] hover:bg-[#1C1C22] text-[#FAF9F5] flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-[#BA8C28]" />
             <span>{loading ? "Generating..." : "Generate Key"}</span>
           </button>
         </form>
 
         {/* Existing Keys Table */}
         <div className="space-y-2">
-          <div className="text-[11px] font-mono uppercase text-[#A1A1AA] mb-2">Active Keys</div>
+          <div className="text-[11px] font-mono uppercase text-[#71717A] mb-2 font-bold">Active Keys</div>
           {keys.length === 0 ? (
-            <div className="text-xs text-zinc-500 font-mono py-4 text-center">
+            <div className="text-xs text-[#71717A] font-mono py-4 text-center">
               No API keys generated yet.
             </div>
           ) : (
             keys.map((k) => (
               <div
                 key={k.id}
-                className="p-3 rounded-xl bg-[#070709] border border-white/5 flex items-center justify-between text-xs font-mono"
+                className="p-3 rounded-xl bg-[#FAF9F5] border border-[#E5DAC1] flex items-center justify-between text-xs font-mono"
               >
                 <div>
-                  <div className="text-[#FAF9F6] font-medium">{k.name}</div>
-                  <div className="text-[10px] text-zinc-500">
-                    Prefix: <span className="text-[#D4AF37]">{k.keyPrefix}••••••••</span> • Created {new Date(k.createdAt).toLocaleDateString()}
+                  <div className="text-[#0A0A0A] font-bold">{k.name}</div>
+                  <div className="text-[10px] text-[#71717A]">
+                    Prefix: <span className="text-[#BA8C28] font-bold">{k.keyPrefix}••••••••</span> • Created {new Date(k.createdAt).toLocaleDateString()}
                   </div>
                 </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
                   SHA-256 Hashed
                 </span>
               </div>
@@ -151,4 +151,3 @@ export default function ApiKeyModal({
     </div>
   );
 }
-
