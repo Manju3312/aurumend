@@ -21,18 +21,28 @@ export async function GET(req: NextRequest) {
     });
 
     // 2. Fetch GitHub Installations
-    const installations = await db.query.githubInstallations.findMany({
+    const rawInstallations = await db.query.githubInstallations.findMany({
       where: eq(githubInstallations.orgId, session.orgId),
     });
 
+    const installations = rawInstallations.map((inst) => ({
+      ...inst,
+      githubInstallationId: inst.githubInstallationId.toString(),
+    }));
+
     // 3. Fetch Subscriptions (Consumer)
-    const subscriptions = await db.query.repoApiSubscriptions.findMany({
+    const rawSubscriptions = await db.query.repoApiSubscriptions.findMany({
       where: eq(repoApiSubscriptions.consumerOrgId, session.orgId),
       orderBy: [desc(repoApiSubscriptions.createdAt)],
     });
 
+    const subscriptions = rawSubscriptions.map((sub) => ({
+      ...sub,
+      githubInstallationId: sub.githubInstallationId.toString(),
+    }));
+
     // 4. Fetch Migration PRs
-    const prs = await db.query.migrationPullRequests.findMany({
+    const rawPrs = await db.query.migrationPullRequests.findMany({
       where: eq(migrationPullRequests.consumerOrgId, session.orgId),
       orderBy: [desc(migrationPullRequests.createdAt)],
       with: {
@@ -40,6 +50,16 @@ export async function GET(req: NextRequest) {
         subscription: true,
       },
     });
+
+    const prs = rawPrs.map((pr) => ({
+      ...pr,
+      subscription: pr.subscription
+        ? {
+            ...pr.subscription,
+            githubInstallationId: pr.subscription.githubInstallationId.toString(),
+          }
+        : null,
+    }));
 
     // 5. Fetch Vendor Releases (Producer)
     const releases = await db.query.vendorApiReleases.findMany({
@@ -74,4 +94,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
