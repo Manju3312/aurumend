@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSessionToken, getOrCreateDefaultOrg, SessionUser } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 import { db } from "@/db";
 import { organizations, orgMemberships } from "@/db/schema";
 import { eq } from "drizzle-orm";

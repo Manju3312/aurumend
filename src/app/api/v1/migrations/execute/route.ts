@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 import { executeAutonomousMigration } from "@/lib/autonomous-migration";
 import { db } from "@/db";
 import { vendorApiReleases, repoApiSubscriptions, auditLogs } from "@/db/schema";

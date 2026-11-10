@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateBearerApiKey, getSession } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 import { computeOpenApiDiff } from "@/lib/openapi-diff";
 import { generateMigrationManifest } from "@/lib/manifest-generator";
 import { db } from "@/db";

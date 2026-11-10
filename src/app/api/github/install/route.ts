@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, signInstallState } from "@/lib/auth";
+import { isGitHubAppLive } from "@/lib/github-auth";
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,18 +14,17 @@ export async function GET(req: NextRequest) {
       timestamp: Date.now(),
     });
 
-    const isLiveConfigured =
-      process.env.GITHUB_APP_PRIVATE_KEY &&
-      !process.env.GITHUB_APP_PRIVATE_KEY.includes("RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0") &&
-      process.env.GITHUB_APP_CLIENT_SECRET;
+    const isLiveConfigured = isGitHubAppLive();
 
     const accountParam = searchParams.get("account") || "acme-corp";
     const requestedAppSlug = searchParams.get("app_slug") || process.env.NEXT_PUBLIC_GITHUB_APP_SLUG || process.env.GITHUB_APP_SLUG;
 
     const forceLive = searchParams.get("live") === "true";
+    const slugLooksRegistered = Boolean(requestedAppSlug && requestedAppSlug !== "aurumend-bot");
 
-    // Only redirect to github.com if a custom registered app slug is provided (avoiding 404 for un-registered placeholder slugs)
-    if ((isLiveConfigured || forceLive) && requestedAppSlug && requestedAppSlug !== "aurumend-bot") {
+    // Real app credentials always install on GitHub, including the default slug once the app exists.
+    // Without credentials, only an explicit non-placeholder slug is sent to github.com.
+    if (requestedAppSlug && (isLiveConfigured || (forceLive && slugLooksRegistered))) {
       const installUrl = `https://github.com/apps/${requestedAppSlug}/installations/new?state=${encodeURIComponent(
         stateToken
       )}`;

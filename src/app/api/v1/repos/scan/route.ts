@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 import { indexCustomerRepository } from "@/lib/ast-indexer";
 import { db } from "@/db";
 import { githubInstallations, repoApiSubscriptions, auditLogs } from "@/db/schema";

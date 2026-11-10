@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { computeOpenApiDiff } from "@/lib/openapi-diff";
 import { generateMigrationManifest } from "@/lib/manifest-generator";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));

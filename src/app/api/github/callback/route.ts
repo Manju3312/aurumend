@@ -45,16 +45,18 @@ export async function GET(req: NextRequest) {
 
     // Attempt to query GitHub for the account login, or use fallback
     let accountLogin = accountParam || "acme-corp";
-    try {
-      const { octokit } = await getInstallationOctokit(installationId);
-      const { data: installationData } = await octokit.rest.apps.getInstallation({
-        installation_id: Number(installationId),
-      });
-      if (installationData.account && "login" in installationData.account) {
-        accountLogin = installationData.account.login;
+    const { octokit, simulated } = await getInstallationOctokit(installationId);
+    if (!simulated) {
+      try {
+        const { data: installationData } = await octokit.rest.apps.getInstallation({
+          installation_id: Number(installationId),
+        });
+        if (installationData.account && "login" in installationData.account) {
+          accountLogin = installationData.account.login;
+        }
+      } catch (err) {
+        console.warn("[GitHub Callback] Could not read installation from GitHub", err);
       }
-    } catch {
-      // In dev mode or when private key isn't live yet
     }
 
     // Upsert installation in DB

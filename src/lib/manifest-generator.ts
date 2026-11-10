@@ -50,13 +50,19 @@ export async function generateMigrationManifest(params: {
 }): Promise<MigrationManifest> {
   const { vendorSlug, versionTag, diff, releaseNotes } = params;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = (process.env.ANTHROPIC_API_KEY || process.env.OPENROUTER_API_KEY)?.trim() || "";
+  const isOpenRouter = apiKey.startsWith("sk-or-v1-");
+  const isAnthropic =
+    apiKey.startsWith("sk-ant-") &&
+    !apiKey.includes("xxxx") &&
+    !apiKey.startsWith("sk-ant-test-") &&
+    apiKey.length > 40;
 
-  // If Anthropic API key is available, use Claude Sonnet for deep AST pattern synthesis
-  if (apiKey && !apiKey.startsWith("sk-ant-test-")) {
+  const isLiveAI = isOpenRouter || isAnthropic;
+
+  // Live Claude is used only with a real key (native Anthropic or OpenRouter). Placeholders stay on the deterministic manifest.
+  if (isLiveAI) {
     try {
-      const anthropic = new Anthropic({ apiKey });
-
       const prompt = `
 You are an expert compiler engineer and AST transformation architect for Aurumend.
 An API Vendor ('${vendorSlug}') has released version '${versionTag}'.
@@ -104,14 +110,42 @@ Return ONLY valid JSON matching this exact TypeScript structure:
 }
 `;
 
-      const response = await anthropic.messages.create({
-        model: "claude-3-5-sonnet-latest",
-        max_tokens: 4000,
-        messages: [{ role: "user", content: prompt }],
-      });
+      let responseText = "{}";
 
-      const responseText =
-        response.content[0].type === "text" ? response.content[0].text : "{}";
+      if (isOpenRouter) {
+        // Query Anthropic Claude 3.5 Sonnet via OpenRouter
+        const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+            "X-Title": "Aurumend Sovereign Protocol",
+          },
+          body: JSON.stringify({
+            model: "anthropic/claude-3.5-sonnet",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.2,
+          }),
+        });
+
+        if (orRes.ok) {
+          const orData = await orRes.json();
+          responseText = orData.choices?.[0]?.message?.content || "{}";
+        } else {
+          const errText = await orRes.text();
+          console.warn("[OpenRouter Claude Error]:", orRes.status, errText);
+        }
+      } else {
+        const anthropic = new Anthropic({ apiKey });
+        const response = await anthropic.messages.create({
+          model: "claude-3-5-sonnet-latest",
+          max_tokens: 4000,
+          messages: [{ role: "user", content: prompt }],
+        });
+        responseText =
+          response.content[0].type === "text" ? response.content[0].text : "{}";
+      }
 
       // Extract JSON block if wrapped in markdown
       const cleaned = responseText
@@ -122,19 +156,21 @@ Return ONLY valid JSON matching this exact TypeScript structure:
 
       const parsed = JSON.parse(cleaned);
 
-      return {
-        vendorSlug,
-        versionTag,
-        generatedAt: new Date().toISOString(),
-        breaking_change_summary: parsed.breaking_change_summary || diff.summary,
-        sunset_date: parsed.sunset_date || "2026-12-31",
-        ast_search_patterns: parsed.ast_search_patterns || [],
-        transformation_instructions: parsed.transformation_instructions || [],
-        contract_test_fixtures: parsed.contract_test_fixtures || [],
-      };
+      if (parsed && typeof parsed === "object") {
+        return {
+          vendorSlug,
+          versionTag,
+          generatedAt: new Date().toISOString(),
+          breaking_change_summary: parsed.breaking_change_summary || diff.summary,
+          sunset_date: parsed.sunset_date || "2026-12-31",
+          ast_search_patterns: parsed.ast_search_patterns || [],
+          transformation_instructions: parsed.transformation_instructions || [],
+          contract_test_fixtures: parsed.contract_test_fixtures || [],
+        };
+      }
     } catch (err) {
       console.warn(
-        "[Manifest Generator] Anthropic Sonnet call failed or returned unparseable JSON, falling back to deterministic synthesis",
+        "[Manifest Generator] AI Claude call failed or returned unparseable JSON, falling back to deterministic synthesis",
         err
       );
     }
